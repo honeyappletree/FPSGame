@@ -25,9 +25,9 @@ public class PlayerHP : MonoBehaviour
         
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if(collision.gameObject.CompareTag("Bullet"))
+        if (other.gameObject.CompareTag("Bullet"))
         {
             currentHP -= 20;
             hpBar.fillAmount = currentHP / maxHP;
@@ -35,7 +35,7 @@ public class PlayerHP : MonoBehaviour
             hpText.text = remainHP.ToString();
             Debug.Log("currentHp: " + currentHP);
 
-            if(currentHP <= 20)
+            if (currentHP <= 20)
             {
                 hpText.color = Color.red;
             }

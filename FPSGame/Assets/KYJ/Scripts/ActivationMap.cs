@@ -5,40 +5,31 @@ using UnityEngine;
 public class ActivationMap : MonoBehaviour
 {
     [SerializeField] private GameObject Minimap;
-    private int pressCount = 0;
+    private int pressCount;
 
     // Start is called before the first frame update
     void Start()
     {
-        Minimap.SetActive(true);
+        pressCount = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.M))
+        if (Input.GetKeyDown(KeyCode.M))
         {
-            if (pressCount == 0)
+            if (pressCount == 1)
             {
-                OddNum(); //È¦¼ö¹ø ´­·¶À» ¶§
+                Minimap.SetActive(true);
+                pressCount--;
+                Debug.Log(pressCount);
             }
-            if(pressCount == 1)
+            else if (pressCount == 0)
             {
-                EvenNum(); //Â¦¼ö¹ø ´­·¶À» ¶§
+                Minimap.SetActive(false);
+                pressCount++;
+                Debug.Log(pressCount);
             }
-
         }
-    }
-
-    void OddNum()
-    {
-        Minimap.SetActive(true);
-        pressCount++;
-    }
-
-    void EvenNum()
-    {
-        Minimap.SetActive(false);
-        pressCount--;
     }
 }
