@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class GameManager : MonoBehaviour
     private float currentTime;
     private int minute;
     private int second;
+    [SerializeField] private GameObject resultPanel;
 
     // Start is called before the first frame update
     void Awake()
@@ -19,7 +21,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        
+        resultPanel.SetActive(false);
     }
 
     // Update is called once per frame
@@ -32,7 +34,7 @@ public class GameManager : MonoBehaviour
     {
         currentTime = time;
 
-        while(currentTime > 0)
+        while (currentTime >= 0)
         {
             currentTime -= Time.deltaTime;
 
@@ -42,10 +44,21 @@ public class GameManager : MonoBehaviour
             timerText.text = minute.ToString("00") + ":" + second.ToString("00");
             yield return null;
 
-            if(currentTime <= 31) //30초 이하면 텍스트가 빨간색으로 변하도록 함.
+            if (currentTime <= 31) //30초 이하면 텍스트가 빨간색으로 변하도록 함.
             {
                 timerText.color = Color.red;
             }
+
+            if (currentTime <= 0)
+            {
+                resultPanel.SetActive(true);
+                Time.timeScale = 0;
+
+                yield break;
+            }
+            
         }
+        
     }
+
 }

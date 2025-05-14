@@ -11,6 +11,7 @@ public class PlayerHP : MonoBehaviour
     private float remainHP;
     private float maxHP = 100;
     private float currentHP;
+    [SerializeField] private GameObject resultPanel;
 
     // Start is called before the first frame update
     void Start()
@@ -22,12 +23,15 @@ public class PlayerHP : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(currentHP == 0)
+        {
+            resultPanel.SetActive(true);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Bullet"))
+        if (other.gameObject.CompareTag("EnemyBullet"))
         {
             currentHP -= 20;
             hpBar.fillAmount = currentHP / maxHP;

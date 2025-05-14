@@ -6,7 +6,7 @@ public class ScreenMove : MonoBehaviour
 {
     private float mouse_X;
     private float mouse_Y;
-    [SerializeField] private float speed = 8;
+    [SerializeField] private float speed = 20;
 
     // Start is called before the first frame update
     void Start()

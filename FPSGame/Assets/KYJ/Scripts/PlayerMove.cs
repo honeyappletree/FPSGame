@@ -9,19 +9,22 @@ public class PlayerMove : MonoBehaviour
 {
     private Rigidbody rigid;
     [SerializeField] private int jumpPower;
-    [SerializeField] private int speed;
+    [SerializeField] private int speed = 6;
     private bool isJumping;
     private bool isGround;
     private int jumpCount;
-    [SerializeField] private TextMeshProUGUI coolTimeText;
-    [SerializeField] private Image SpeedUp;
-    private float coolTime = 5;
     private float currentTime = 0;
+    [SerializeField] private Image speedUP;
+    [SerializeField] private TextMeshProUGUI coolTimeText;
+    private float coolTime = 5;
 
     // Start is called before the first frame update
     void Start()
     {
         rigid = GetComponent<Rigidbody>();
+        speedUP.GetComponent<Image>();
+        coolTimeText.color = new Color(1, 1, 1, 0);
+        StartCoroutine(SkillCooltime());
     }
 
     // Update is called once per frame
@@ -68,18 +71,6 @@ public class PlayerMove : MonoBehaviour
             transform.Translate(Vector3.right * speed * Time.deltaTime);
         }
 
-        if(Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            currentTime += Time.time;
-
-            if(currentTime <= coolTime)
-            {
-                speed = 5;
-                SpeedUp.fillAmount = Mathf.Lerp(0, 1, Time.deltaTime * coolTime);
-                coolTimeText.text = currentTime.ToString();
-                coolTime--;
-            }
-        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -90,5 +81,33 @@ public class PlayerMove : MonoBehaviour
             isGround = true;
             jumpCount = 0;
         }
+    }
+
+    IEnumerator SkillCooltime()
+    {
+        while(coolTime > 0)
+        {
+            coolTime -= Time.deltaTime;
+
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                if(speedUP.fillAmount < 0)
+                {
+                    speedUP.color = new Color(0.66f, 0.66f, 0.66f, 1);
+                    coolTimeText.color = new Color(1, 1, 1, 1);
+                    speedUP.fillAmount = (int)currentTime / (int)coolTime;
+                    coolTimeText.text = coolTime.ToString();
+                    Debug.Log("able");
+                }
+                else if(speedUP.fillAmount == 0)
+                {
+                    speedUP.color = new Color(1, 1, 1, 1);
+                    coolTimeText.color = new Color(1, 1, 1, 0);
+                    Debug.Log("disable");
+                }
+                yield return null;
+            }
+        }
+        
     }
 }
