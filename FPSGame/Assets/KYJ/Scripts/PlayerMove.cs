@@ -13,18 +13,22 @@ public class PlayerMove : MonoBehaviour
     private bool isJumping;
     private bool isGround;
     private int jumpCount;
-    private float currentTime = 0;
-    [SerializeField] private Image speedUP;
+    private float currentTime;
+    [SerializeField] private Image speedUP; //맨 윗부분 이미지
     [SerializeField] private TextMeshProUGUI coolTimeText;
     private float coolTime = 5;
+    private float mouse_X; //플레이어가 mouse를 좌우로 움직이면 회전하기 위함.
+    private float speedUp;
+    private bool isCool = false;
+    private float speedTimer = 2; //속도를 일시적으로 올리기 위한 타이머
 
     // Start is called before the first frame update
     void Start()
     {
         rigid = GetComponent<Rigidbody>();
         speedUP.GetComponent<Image>();
-        coolTimeText.color = new Color(1, 1, 1, 0);
-        StartCoroutine(SkillCooltime());
+        coolTimeText.alpha = 0;
+        currentTime = coolTime;
     }
 
     // Update is called once per frame
@@ -32,6 +36,14 @@ public class PlayerMove : MonoBehaviour
     {
         Move();
         Jump();
+        Rotate();
+
+        if(Input.GetKeyDown(KeyCode.LeftShift) && isCool == false)
+        {
+            isCool = true;
+            currentTime = coolTime;
+            StartCoroutine(SkillCooltime());
+        }
     }
 
     void Jump()
@@ -73,6 +85,13 @@ public class PlayerMove : MonoBehaviour
 
     }
 
+    void Rotate()
+    {
+        float mouseX = Input.GetAxis("Mouse X");
+        mouse_X += mouseX * speed * Time.deltaTime;
+        transform.eulerAngles = new Vector3(0, mouse_X, 0);
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.CompareTag("Ground"))
@@ -83,31 +102,37 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+    
     IEnumerator SkillCooltime()
     {
-        while(coolTime > 0)
-        {
-            coolTime -= Time.deltaTime;
+        isCool = true;
 
-            if (Input.GetKeyDown(KeyCode.LeftShift))
-            {
-                if(speedUP.fillAmount < 0)
-                {
-                    speedUP.color = new Color(0.66f, 0.66f, 0.66f, 1);
-                    coolTimeText.color = new Color(1, 1, 1, 1);
-                    speedUP.fillAmount = (int)currentTime / (int)coolTime;
-                    coolTimeText.text = coolTime.ToString();
-                    Debug.Log("able");
-                }
-                else if(speedUP.fillAmount == 0)
-                {
-                    speedUP.color = new Color(1, 1, 1, 1);
-                    coolTimeText.color = new Color(1, 1, 1, 0);
-                    Debug.Log("disable");
-                }
-                yield return null;
-            }
+        speedTimer = 2;
+        while(speedTimer > 0)
+        {
+            speedTimer -= Time.deltaTime;
+            speed = 12;
+            Debug.Log("speed: " + speed);
+            yield return null;
         }
-        
+        speed = 6;
+        Debug.Log("쿨타임 시작" + ", speed는 " + speed);
+
+        while(currentTime > 0)
+        {
+            currentTime -= Time.deltaTime;
+
+            speedUP.color = new Color(0.67f, 0.67f, 0.67f, 1);
+            speedUP.fillAmount = (int)currentTime / coolTime;
+            speedUp = speedUP.fillAmount * 5;
+            coolTimeText.alpha = 1;
+            coolTimeText.text = speedUp.ToString();
+
+            yield return null;
+        }
+        coolTimeText.alpha = 0;
+        speedUP.color = new Color(1, 1, 1, 1);
+
+        isCool = false;
     }
 }

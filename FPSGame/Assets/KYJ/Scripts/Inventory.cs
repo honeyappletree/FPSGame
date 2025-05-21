@@ -1,19 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static UnityEngine.EventSystems.EventTrigger;
 
 public class Inventory : MonoBehaviour
 {
     [SerializeField] private GameObject inventory;
+    [SerializeField] private GameObject back;
     private int pressCount;
+    private bool isActive;
+    [SerializeField] private TextMeshProUGUI itemNameText;
+    [SerializeField] private TextMeshProUGUI itemDescription;
+
+    private Slot[] slots;
 
     // Start is called before the first frame update
     void Start()
     {
         inventory.SetActive(false);
-        pressCount = 0;
+        isActive = false;
+        slots = back.GetComponentsInChildren<Slot>();
     }
 
     // Update is called once per frame
@@ -21,19 +31,46 @@ public class Inventory : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
-            if (pressCount == 0)
+            if (isActive != true)
             {
                 inventory.SetActive(true);
-                pressCount++;
+                isActive = true;
                 Time.timeScale = 0;
-                Debug.Log(pressCount);
+                Debug.Log("인벤토리 활성화");
             }
-            else if (pressCount == 1)
+            else if (isActive == true)
             {
                 inventory.SetActive(false);
-                pressCount--;
+                isActive = false;
                 Time.timeScale = 1;
-                Debug.Log(pressCount);
+                Debug.Log("인벤토리 비활성화");
+            }
+        }
+    }
+
+    public void AcquireItem(ItemSO _item)
+    {
+        for(int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i].item != null)
+            {
+                if (slots[i].item.itemName == _item.itemName)
+                {
+                    slots[i].AddItem(_item);
+                    slots[i].SetSlotCount(0);
+                    itemNameText.text = " ";
+                    itemDescription.text = " ";
+                    return;
+                }
+            }
+        }
+
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i].item == null)
+            {
+                slots[i].ClearSlot();
+                return;
             }
         }
     }

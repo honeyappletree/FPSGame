@@ -12,6 +12,7 @@ public class PlayerHP : MonoBehaviour
     private float maxHP = 100;
     private float currentHP;
     [SerializeField] private GameObject resultPanel;
+    [SerializeField] private GameObject warningPanel;
 
     // Start is called before the first frame update
     void Start()
@@ -23,26 +24,55 @@ public class PlayerHP : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(currentHP == 0)
-        {
-            resultPanel.SetActive(true);
-        }
+        RemainHP();
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("EnemyBullet"))
         {
-            currentHP -= 20;
+            currentHP -= 10;
             hpBar.fillAmount = currentHP / maxHP;
             remainHP = hpBar.fillAmount * 100;
             hpText.text = remainHP.ToString();
             Debug.Log("currentHp: " + currentHP);
+        }
+    }
 
-            if (currentHP <= 20)
-            {
-                hpText.color = Color.red;
-            }
+    void RemainHP()
+    {
+        if (currentHP <= 20)
+        {
+            hpText.color = Color.red;
+        }
+
+        if(currentHP <= 10)
+        {
+            warningPanel.SetActive(true);
+        }
+
+        if (currentHP <= 0)
+        {
+            resultPanel.SetActive(true);
+            warningPanel.SetActive(false);
+            Time.timeScale = 0;
+        }
+    }
+
+    public void IncreaseHP(int _count)
+    {
+        if(currentHP + _count < maxHP)
+        {
+            currentHP += _count;
+            hpBar.fillAmount = currentHP / maxHP;
+            remainHP = hpBar.fillAmount * 100;
+            hpText.text = remainHP.ToString();
+            Debug.Log(_count + "만큼 회복되었습니다.");
+        }
+        else
+        {
+            currentHP = maxHP;
+            Debug.Log("현재 hp가 풀hp입니다.");
         }
     }
 }

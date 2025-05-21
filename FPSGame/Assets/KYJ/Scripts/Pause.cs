@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class Pause : MonoBehaviour
 {
     [SerializeField] private GameObject Pausepanel;
-    private int escapeCount;
+    private bool isActive;
     [SerializeField] private Button ResumeButton;
     [SerializeField] private Button QuitButton;
     [SerializeField] private Button RetryButton;
@@ -16,10 +16,10 @@ public class Pause : MonoBehaviour
     void Start()
     {
         Pausepanel.SetActive(false);
-        escapeCount = 0;
         ResumeButton.onClick.AddListener(Resume);
         QuitButton.onClick.AddListener(Quit);
         RetryButton.onClick.AddListener(Retry);
+        isActive = false;
     }
 
     // Update is called once per frame
@@ -27,19 +27,19 @@ public class Pause : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Escape))
         {
-            if(escapeCount == 0)
+            if(isActive != true)
             {
                 Pausepanel.SetActive(true);
-                escapeCount++;
                 Time.timeScale = 0;
-                Debug.Log(escapeCount);
+                isActive = true;
+                Debug.Log("판넬 활성화");
             }
-            else if(escapeCount == 1)
+            else if(isActive == true)
             {
                 Pausepanel.SetActive(false);
-                escapeCount--;
                 Time.timeScale = 1;
-                Debug.Log(escapeCount);
+                isActive = false;
+                Debug.Log("판넬 비활성화");
             }
         }
     }
@@ -47,18 +47,21 @@ public class Pause : MonoBehaviour
     void Resume()
     {
         Pausepanel.SetActive(false);
+        isActive = false;
         Time.timeScale = 1;
     }
 
     void Quit()
     {
         SceneManager.LoadScene("SampleScene");
+        isActive = false;
         Time.timeScale = 1;
     }
 
     void Retry()
     {
         SceneManager.LoadScene("GameScene");
+        isActive = false;
         Time.timeScale = 1;
     }
 }
