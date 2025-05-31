@@ -1,0 +1,143 @@
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting;
+using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
+using UnityEngine.UI;
+using UnityEditor.PackageManager;
+
+public class PlayerFire : MonoBehaviour
+{
+    private float currentTime;
+    [SerializeField] private TextMeshProUGUI coolTimeText2; //물폭탄 쿨타임 텍스트
+    private float coolTime = 5;
+    private float waterF; //ui 연출을 위한 변수
+    private bool isWater = false; //쿨타임 true, false 여부
+    private bool shootBomb = false; //물폭탄을 쏠 수 있는지 여부 
+    private float waterTimer = 2; //속도를 일시적으로 올리기 위한 타이머
+    [SerializeField] private Image water; //물폭탄 스킬의 맨 윗부분 이미지
+    [SerializeField] private Transform waterPosition;
+    [SerializeField] private GameObject waterBomb;
+    [SerializeField] private float throwForce;
+    [SerializeField] private float upForce;
+    [SerializeField] private float range;
+    private bool canShoot = false; //총을 쏠 수 있는지에 대한 여부
+    private RaycastHit hitInfo;
+    [SerializeField] private LayerMask layerMask;
+    [SerializeField] private TextMeshProUGUI currentBulletText;
+    private int currentBullet; //현재 남아있는 총알 수
+    private int maxBullet = 10; //탄환 속 최대 총알 수
+    [SerializeField] private GameObject effectPrefab;
+    [SerializeField] private Transform bulletPosition;
+    ParticleSystem bulletEffect;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        coolTimeText2.alpha = 0;
+        currentTime = coolTime;
+        water.GetComponent<Image>();
+        currentBullet = maxBullet;
+        canShoot = false;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.B) && isWater == false) //물폭탄 공격 쿨타임
+        {
+            isWater = true;
+            currentTime = coolTime;
+            StartCoroutine(ShootWater());
+        }
+        ShootGun();
+    }
+
+    IEnumerator ShootWater()
+    {
+        isWater = true;
+
+        waterTimer = 2;
+        while (waterTimer > 0)
+        {
+            waterTimer -= Time.deltaTime;
+            shootBomb = true;
+            if(Input.GetKeyDown(KeyCode.B))
+            {
+                GameObject _water = Instantiate(waterBomb, waterPosition.position, Quaternion.identity);
+                Rigidbody rigidbody = _water.GetComponent<Rigidbody>();
+                Vector3 direction = waterPosition.forward * throwForce + Vector3.up * upForce;
+                rigidbody.AddForce(direction, ForceMode.Impulse);
+                Debug.Log(shootBomb);
+            }
+            yield return null;
+        }
+        Debug.Log("쿨타임 시작");
+
+        while (currentTime > 0)
+        {
+            currentTime -= Time.deltaTime;
+
+            shootBomb = false;
+            Debug.Log(shootBomb);
+            water.color = new Color(0.67f, 0.67f, 0.67f, 1);
+            water.fillAmount = (int)currentTime / coolTime;
+            waterF = water.fillAmount * 5;
+            coolTimeText2.alpha = 1;
+            coolTimeText2.text = waterF.ToString();
+
+            yield return null;
+        }
+        coolTimeText2.alpha = 0;
+        water.color = new Color(1, 1, 1, 1);
+
+        isWater = false;
+    }
+
+    void ShootGun()
+    {
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hitInfo, range, layerMask))
+        {
+            if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+            {
+                if(Input.GetMouseButtonDown(0)) //왼쪽 마우스 버튼을 누르면 총을 쏠 수 있음.
+                {
+                    if(Inventory.isActive == true)
+                    {
+                        canShoot = false;
+                        currentBullet -= 0;
+                        Debug.Log("총 공격 불가");
+                    }
+                    else if(Inventory.isActive == false)
+                    {
+                        currentBullet--;
+                        currentBulletText.text = currentBullet.ToString();
+                        var effect = Instantiate(effectPrefab);
+                        effect.transform.position = bulletPosition.transform.position;
+                        Debug.Log("currentBullet: " + currentBullet);
+                        canShoot = true;
+                        Debug.Log("적이 감지되어 총을 사용하였습니다.");
+                    }
+
+                    if (currentBullet <= 0)
+                    {
+                        canShoot = false;
+                        Debug.Log(canShoot);
+                        currentBulletText.text = "0";
+                    }
+                    if (currentBullet <= 4)
+                    {
+                        canShoot = true;
+                        currentBulletText.color = Color.red;
+                    }
+                }
+            }
+        }
+        else
+        {
+            canShoot = false;
+            Debug.Log("적 외에는 총을 사용할 수 없습니다.");
+        }
+    }
+}

@@ -23,8 +23,8 @@ public class ScreenMove : MonoBehaviour
         mouse_X += mouseX * speed * Time.deltaTime;
         mouse_Y += mouseY * speed * Time.deltaTime;
 
-        mouse_Y = Mathf.Clamp(mouse_Y, -60f, 60f);
-        mouse_X = Mathf.Clamp(mouse_X, -60f, 60f);
+        mouse_Y = Mathf.Clamp(mouse_Y, -90f, 90f);
+        mouse_X = Mathf.Clamp(mouse_X, -90f, 90f);
         transform.eulerAngles = new Vector3(-mouse_Y, mouse_X, 0);
     }
 }

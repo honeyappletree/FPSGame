@@ -14,12 +14,12 @@ public class PlayerMove : MonoBehaviour
     private bool isGround;
     private int jumpCount;
     private float currentTime;
-    [SerializeField] private Image speedUP; //맨 윗부분 이미지
-    [SerializeField] private TextMeshProUGUI coolTimeText;
-    private float coolTime = 5;
+    [SerializeField] private Image speedUP; //속도 올리는 스킬의 맨 윗부분 이미지
+    [SerializeField] private TextMeshProUGUI coolTimeText1; //속도 증가 쿨타임 텍스트
     private float mouse_X; //플레이어가 mouse를 좌우로 움직이면 회전하기 위함.
     private float speedUp;
     private bool isCool = false;
+    private float coolTime = 5;
     private float speedTimer = 2; //속도를 일시적으로 올리기 위한 타이머
 
     // Start is called before the first frame update
@@ -27,8 +27,9 @@ public class PlayerMove : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody>();
         speedUP.GetComponent<Image>();
-        coolTimeText.alpha = 0;
+        coolTimeText1.alpha = 0;
         currentTime = coolTime;
+        transform.Translate(0, 1, -11);
     }
 
     // Update is called once per frame
@@ -38,7 +39,7 @@ public class PlayerMove : MonoBehaviour
         Jump();
         Rotate();
 
-        if(Input.GetKeyDown(KeyCode.LeftShift) && isCool == false)
+        if(Input.GetKeyDown(KeyCode.LeftShift) && isCool == false) //플레이어의 속도 증가 쿨타임
         {
             isCool = true;
             currentTime = coolTime;
@@ -125,14 +126,15 @@ public class PlayerMove : MonoBehaviour
             speedUP.color = new Color(0.67f, 0.67f, 0.67f, 1);
             speedUP.fillAmount = (int)currentTime / coolTime;
             speedUp = speedUP.fillAmount * 5;
-            coolTimeText.alpha = 1;
-            coolTimeText.text = speedUp.ToString();
+            coolTimeText1.alpha = 1;
+            coolTimeText1.text = speedUp.ToString();
 
             yield return null;
         }
-        coolTimeText.alpha = 0;
+        coolTimeText1.alpha = 0;
         speedUP.color = new Color(1, 1, 1, 1);
 
         isCool = false;
     }
+
 }

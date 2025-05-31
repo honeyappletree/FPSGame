@@ -8,6 +8,9 @@ TagManager:
   - Bullet
   - EnemyBullet
   - Item
+  - Enemy
+  - Fire
+  - FxTemporaire
   layers:
   - Default
   - TransparentFX
@@ -17,7 +20,7 @@ TagManager:
   - UI
   - Minimap
   - Item
-  - 
+  - Enemy
   - 
   - 
   - 

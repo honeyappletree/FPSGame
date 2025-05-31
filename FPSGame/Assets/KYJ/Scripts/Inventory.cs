@@ -12,7 +12,7 @@ public class Inventory : MonoBehaviour
     [SerializeField] private GameObject inventory;
     [SerializeField] private GameObject back;
     private int pressCount;
-    private bool isActive;
+    public static bool isActive;
     [SerializeField] private TextMeshProUGUI itemNameText;
     [SerializeField] private TextMeshProUGUI itemDescription;
 

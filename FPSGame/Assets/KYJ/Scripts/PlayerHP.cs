@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SocialPlatforms;
 
 public class PlayerHP : MonoBehaviour
 {
@@ -13,12 +14,15 @@ public class PlayerHP : MonoBehaviour
     private float currentHP;
     [SerializeField] private GameObject resultPanel;
     [SerializeField] private GameObject warningPanel;
+    private float timer = 3;
+    private bool isFont = false;
 
     // Start is called before the first frame update
     void Start()
     {
         currentHP = maxHP;
         hpBar.GetComponent<Image>();
+        isFont = false;
     }
 
     // Update is called once per frame
@@ -32,6 +36,15 @@ public class PlayerHP : MonoBehaviour
         if (other.gameObject.CompareTag("EnemyBullet"))
         {
             currentHP -= 10;
+            hpBar.fillAmount = currentHP / maxHP;
+            remainHP = hpBar.fillAmount * 100;
+            hpText.text = remainHP.ToString();
+            Debug.Log("currentHp: " + currentHP);
+        }
+
+        if(other.gameObject.CompareTag("Fire"))
+        {
+            currentHP -= 5;
             hpBar.fillAmount = currentHP / maxHP;
             remainHP = hpBar.fillAmount * 100;
             hpText.text = remainHP.ToString();
@@ -67,6 +80,7 @@ public class PlayerHP : MonoBehaviour
             hpBar.fillAmount = currentHP / maxHP;
             remainHP = hpBar.fillAmount * 100;
             hpText.text = remainHP.ToString();
+            StartCoroutine(FontColor());
             Debug.Log(_count + "만큼 회복되었습니다.");
         }
         else
@@ -74,5 +88,22 @@ public class PlayerHP : MonoBehaviour
             currentHP = maxHP;
             Debug.Log("현재 hp가 풀hp입니다.");
         }
+    }
+
+    IEnumerator FontColor() //폰트의 색을 일시적으로 변하게 하는 함수
+    {
+        isFont = true;
+
+        timer = 2;
+        while (timer > 0)
+        {
+            timer -= Time.deltaTime;
+            hpText.color = Color.green;
+            Debug.Log("폰트 색이 초록색으로 변하였습니다.");
+            Time.timeScale = 1; //폰트 색은 일시정지 되는 것과 관계없이 인벤토리 활성화된 상태에서도 변화를 주기 위해서
+            yield return null;
+        }
+        hpText.color = Color.black;
+        Debug.Log("폰트 색이 검은색으로 변하였습니다.");
     }
 }
