@@ -10,7 +10,7 @@ TagManager:
   - Item
   - Enemy
   - Fire
-  - FxTemporaire
+  - WaterBomb
   layers:
   - Default
   - TransparentFX

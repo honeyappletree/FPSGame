@@ -45,7 +45,7 @@ public class CheckDistance : MonoBehaviour
         }
         else
         {
-            IntemInfoDisappear();
+            ItemInfoDisappear();
         }
     }
 
@@ -55,7 +55,7 @@ public class CheckDistance : MonoBehaviour
         pickupText.gameObject.SetActive(true);
     }
 
-    void IntemInfoDisappear()
+    void ItemInfoDisappear()
     {
         canPickup = false;
         pickupText.gameObject.SetActive(false);
@@ -70,7 +70,7 @@ public class CheckDistance : MonoBehaviour
                 Debug.Log(hitInfo.transform.GetComponent<ItemPick>().item.itemName + "»πµÊ«ﬂΩ¿¥œ¥Ÿ.");
                 theInventory.AcquireItem(hitInfo.transform.GetComponent<ItemPick>().item);
                 Destroy(hitInfo.transform.gameObject);
-                IntemInfoDisappear();
+                ItemInfoDisappear();
             }
         }
     }

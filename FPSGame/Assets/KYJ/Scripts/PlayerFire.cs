@@ -22,15 +22,13 @@ public class PlayerFire : MonoBehaviour
     [SerializeField] private float throwForce;
     [SerializeField] private float upForce;
     [SerializeField] private float range;
-    private bool canShoot = false; //총을 쏠 수 있는지에 대한 여부
+    public static bool canShoot = false; //총을 쏠 수 있는지에 대한 여부
     private RaycastHit hitInfo;
     [SerializeField] private LayerMask layerMask;
     [SerializeField] private TextMeshProUGUI currentBulletText;
-    private int currentBullet; //현재 남아있는 총알 수
-    private int maxBullet = 10; //탄환 속 최대 총알 수
-    [SerializeField] private GameObject effectPrefab;
-    [SerializeField] private Transform bulletPosition;
-    ParticleSystem bulletEffect;
+    public static int currentBullet; //현재 남아있는 총알 수
+    private int maxBullet = 7; //탄환 속 최대 총알 수
+    public static bool isReload;//재장전이 가능한지 여부
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +38,7 @@ public class PlayerFire : MonoBehaviour
         water.GetComponent<Image>();
         currentBullet = maxBullet;
         canShoot = false;
+        isReload = false;
     }
 
     // Update is called once per frame
@@ -52,6 +51,10 @@ public class PlayerFire : MonoBehaviour
             StartCoroutine(ShootWater());
         }
         ShootGun();
+        if (currentBullet <= 0 && !isReload && Input.GetKeyDown(KeyCode.R))
+        {
+            StartCoroutine(GunReload());
+        }
     }
 
     IEnumerator ShootWater()
@@ -103,33 +106,31 @@ public class PlayerFire : MonoBehaviour
             {
                 if(Input.GetMouseButtonDown(0)) //왼쪽 마우스 버튼을 누르면 총을 쏠 수 있음.
                 {
-                    if(Inventory.isActive == true)
-                    {
-                        canShoot = false;
-                        currentBullet -= 0;
-                        Debug.Log("총 공격 불가");
-                    }
-                    else if(Inventory.isActive == false)
+                    if(Inventory.isActive == false)
                     {
                         currentBullet--;
                         currentBulletText.text = currentBullet.ToString();
-                        var effect = Instantiate(effectPrefab);
-                        effect.transform.position = bulletPosition.transform.position;
+                        var effect = EffectPool.GetObject();
                         Debug.Log("currentBullet: " + currentBullet);
                         canShoot = true;
                         Debug.Log("적이 감지되어 총을 사용하였습니다.");
-                    }
 
-                    if (currentBullet <= 0)
+                        if (currentBullet <= 4)
+                        {
+                            canShoot = true;
+                            currentBulletText.color = Color.red;
+                        }
+                        if (currentBullet <= 0)
+                        {
+                            canShoot = false;
+                            currentBullet -= 0;
+                            Debug.Log("현재 탄환 수는 0 이하입니다." + canShoot);
+                        }
+                    }
+                    else if(Inventory.isActive == true)
                     {
                         canShoot = false;
-                        Debug.Log(canShoot);
-                        currentBulletText.text = "0";
-                    }
-                    if (currentBullet <= 4)
-                    {
-                        canShoot = true;
-                        currentBulletText.color = Color.red;
+                        Debug.Log("인벤토리가 활성화되어 있습니다.");
                     }
                 }
             }
@@ -138,6 +139,22 @@ public class PlayerFire : MonoBehaviour
         {
             canShoot = false;
             Debug.Log("적 외에는 총을 사용할 수 없습니다.");
+        }
+    }
+
+    IEnumerator GunReload()
+    {
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            isReload = true;
+            canShoot = false;
+            yield return new WaitForSeconds(1f);
+            currentBullet = maxBullet;
+            currentBulletText.text = currentBullet.ToString();
+            Debug.Log("탄환이 maxBullet만큼 재장전되었습니다.");
+            currentBulletText.color = Color.black;
+            isReload = false;
+            canShoot = true;
         }
     }
 }

@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BulletEffect : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+
+    private void OnEnable()
     {
-        
+        StartCoroutine(EffectReturn());
     }
 
     // Update is called once per frame
@@ -16,8 +17,10 @@ public class BulletEffect : MonoBehaviour
         
     }
 
-    public void Effect()
+    IEnumerator EffectReturn()
     {
-        Destroy(gameObject, 3f);
+        yield return new WaitForSeconds(0.3f);
+        EffectPool.ReturnObject(this);
+        Debug.Log("이펙트가 반환되었습니다.");
     }
 }

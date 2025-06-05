@@ -16,7 +16,7 @@ public class PlayerMove : MonoBehaviour
     private float currentTime;
     [SerializeField] private Image speedUP; //속도 올리는 스킬의 맨 윗부분 이미지
     [SerializeField] private TextMeshProUGUI coolTimeText1; //속도 증가 쿨타임 텍스트
-    private float mouse_X; //플레이어가 mouse를 좌우로 움직이면 회전하기 위함.
+    public static float mouse_X; //플레이어가 mouse를 좌우로 움직이면 회전하기 위함.
     private float speedUp;
     private bool isCool = false;
     private float coolTime = 5;

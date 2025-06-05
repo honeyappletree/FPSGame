@@ -16,6 +16,7 @@ public class PlayerHP : MonoBehaviour
     [SerializeField] private GameObject warningPanel;
     private float timer = 3;
     private bool isFont = false;
+    private float recoveryHP;
 
     // Start is called before the first frame update
     void Start()
@@ -74,20 +75,39 @@ public class PlayerHP : MonoBehaviour
 
     public void IncreaseHP(int _count)
     {
-        if(currentHP + _count < maxHP)
+        if (currentHP < maxHP)
         {
+            if (currentHP + _count <= maxHP) //현재 hp + hp 회복량이 maxHP보다 작거나 같은 경우
+            {
+                currentHP += _count;
+                hpBar.fillAmount = currentHP / maxHP;
+                remainHP = hpBar.fillAmount * 100;
+                hpText.text = remainHP.ToString();
+                StartCoroutine(FontColor());
+                Debug.Log(_count + "만큼 회복되었습니다.");
+            }
+
+            else if (currentHP + _count > maxHP)
+            {
+                recoveryHP = (currentHP + _count) - maxHP;
+                currentHP += recoveryHP;
+                hpBar.fillAmount = currentHP / maxHP;
+                remainHP = hpBar.fillAmount * 100;
+                hpText.text = remainHP.ToString();
+                StartCoroutine(FontColor());
+                Debug.Log(recoveryHP + " 만큼 회복되었습니다.");
+                }
+        }
+
+        else if(currentHP == maxHP)
+        {
+            _count = 0;
             currentHP += _count;
-            hpBar.fillAmount = currentHP / maxHP;
             remainHP = hpBar.fillAmount * 100;
             hpText.text = remainHP.ToString();
-            StartCoroutine(FontColor());
-            Debug.Log(_count + "만큼 회복되었습니다.");
+            Debug.Log("풀hp입니다.");
         }
-        else
-        {
-            currentHP = maxHP;
-            Debug.Log("현재 hp가 풀hp입니다.");
-        }
+
     }
 
     IEnumerator FontColor() //폰트의 색을 일시적으로 변하게 하는 함수

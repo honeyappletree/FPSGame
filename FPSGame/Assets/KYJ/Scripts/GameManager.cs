@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI timerText;
-    private float time = 60;
+    private float time = 120;
     private float currentTime;
     private int minute;
     private int second;
