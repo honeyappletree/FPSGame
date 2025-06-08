@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyFSM : MonoBehaviour
 {
@@ -22,9 +25,14 @@ public class EnemyFSM : MonoBehaviour
     float attackDelay = 2f;
     float currentTime = 0;
     Vector3 originPosition; //Enemy가 원래 위치해있던 좌표
+    Quaternion originRotation;
     [SerializeField] private float moveDistance = 20f;
     int currentHP;
     int maxHP = 50;
+    [SerializeField] private Image enemyHPBar;
+    [SerializeField] private TextMeshProUGUI personText;
+    private int dieEnemy = 0; //죽인 적의 수
+    private float remainHP;
     
     // Start is called before the first frame update
     void Start()
@@ -32,13 +40,15 @@ public class EnemyFSM : MonoBehaviour
         e_State = EnemyState.Idle;
         currentHP = maxHP;
         originPosition = transform.position;
+        originRotation = transform.rotation;
         character = GetComponent<CharacterController>();
+        enemyHPBar = enemyHPBar.GetComponent<Image>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        switch(e_State)
+        switch (e_State)
         {
             case EnemyState.Idle:
                 Idle();
@@ -58,6 +68,34 @@ public class EnemyFSM : MonoBehaviour
             case EnemyState.Die:
                 Die();
                 break;
+        }
+
+    }
+
+    public void HitEnemy()
+    {
+        if(e_State == EnemyState.Damaged || e_State == EnemyState.Die || e_State == EnemyState.Return)
+        {
+            return;
+        }
+        currentHP -= 10;
+        enemyHPBar.fillAmount = (float)currentHP / (float)maxHP;
+        Debug.Log("적의 currentHP: " + currentHP);
+
+
+        if(currentHP > 0)
+        {
+            e_State = EnemyState.Damaged;
+            Debug.Log("Any State -> Damaged");
+            Damaged();
+        }
+        else
+        {
+            e_State = EnemyState.Die;
+            Debug.Log("Any State -> Die");
+            Die();
+            dieEnemy++;
+            personText.text = dieEnemy.ToString();
         }
     }
 
@@ -81,6 +119,7 @@ public class EnemyFSM : MonoBehaviour
         {
             Vector3 dir = (player.position - transform.position).normalized;
             character.Move(dir * moveSpeed * Time.deltaTime);
+            transform.forward = dir;
         }
         else
         {
@@ -90,11 +129,22 @@ public class EnemyFSM : MonoBehaviour
         }
     }
 
+    public void AttackAction()
+    {
+        player.GetComponent<PlayerHP>().DamageAction();
+    }
+
     void Attack()
     {
         if(Vector3.Distance(transform.position, player.position) < attackDistance)
         {
-            e_State = EnemyState.Attack;
+            currentTime += Time.deltaTime;
+            if(currentTime > attackDelay)
+            {
+                player.GetComponent<PlayerHP>().DamageAction();
+                Debug.Log("공격");
+                currentTime = 0;
+            }
         }
         else
         {
@@ -110,24 +160,39 @@ public class EnemyFSM : MonoBehaviour
         {
             Vector3 dir = (originPosition - transform.position).normalized;
             character.Move(dir * moveSpeed * Time.deltaTime);
+            transform.forward = dir;
         }
         else
         {
-            {
-                transform.position = originPosition;
-                e_State = EnemyState.Idle;
-                Debug.Log("Return -> Idle");
-            }
+            transform.position = originPosition;
+            transform.rotation = originRotation;
+            e_State = EnemyState.Idle;
+            Debug.Log("Return -> Idle");
         }
     }
 
     void Damaged()
     {
-
+        StartCoroutine(DamagedProcess());
     }
 
     void Die()
     {
+        StopAllCoroutines();
+        StartCoroutine(DieProcess());
+    }
 
+    IEnumerator DieProcess()
+    {
+        character.enabled = false;
+        Destroy(gameObject, 4f);
+        yield return null;
+    }
+
+    IEnumerator DamagedProcess()
+    {
+        yield return new WaitForSeconds(1f);
+        e_State = EnemyState.Move;
+        Debug.Log("Damaged -> Move");
     }
 }

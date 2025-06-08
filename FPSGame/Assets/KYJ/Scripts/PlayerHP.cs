@@ -34,15 +34,6 @@ public class PlayerHP : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("EnemyBullet"))
-        {
-            currentHP -= 10;
-            hpBar.fillAmount = currentHP / maxHP;
-            remainHP = hpBar.fillAmount * 100;
-            hpText.text = remainHP.ToString();
-            Debug.Log("currentHp: " + currentHP);
-        }
-
         if(other.gameObject.CompareTag("Fire"))
         {
             currentHP -= 5;
@@ -51,6 +42,15 @@ public class PlayerHP : MonoBehaviour
             hpText.text = remainHP.ToString();
             Debug.Log("currentHp: " + currentHP);
         }
+    }
+
+    public void DamageAction()
+    {
+        currentHP -= 10;
+        hpBar.fillAmount = currentHP / maxHP;
+        remainHP = hpBar.fillAmount * 100;
+        hpText.text = remainHP.ToString();
+        Debug.Log("currentHp: " + currentHP);
     }
 
     void RemainHP()
@@ -87,19 +87,19 @@ public class PlayerHP : MonoBehaviour
                 Debug.Log(_count + "만큼 회복되었습니다.");
             }
 
-            else if (currentHP + _count > maxHP)
+            else if (currentHP + _count > maxHP) //현재 hp + hp 회복량이 maxHP보다 큰 경우
             {
-                recoveryHP = (currentHP + _count) - maxHP;
+                recoveryHP = (currentHP + _count) - maxHP; //현재 hp + hp 회복량에서 maxHP를 뺀 만큼 회복하여 maxHP만큼만 회복하게끔
                 currentHP += recoveryHP;
                 hpBar.fillAmount = currentHP / maxHP;
                 remainHP = hpBar.fillAmount * 100;
                 hpText.text = remainHP.ToString();
                 StartCoroutine(FontColor());
                 Debug.Log(recoveryHP + " 만큼 회복되었습니다.");
-                }
+            }
         }
 
-        else if(currentHP == maxHP)
+        else if(currentHP == maxHP) //현재 hp와 maxHP가 같은 경우(현재 hp == 100)
         {
             _count = 0;
             currentHP += _count;

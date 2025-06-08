@@ -35,7 +35,6 @@ public class Inventory : MonoBehaviour
             {
                 inventory.SetActive(true);
                 isActive = true;
-                PlayerFire.canShoot = false;
                 Time.timeScale = 0;
                 Debug.Log("인벤토리 활성화");
             }
@@ -44,7 +43,6 @@ public class Inventory : MonoBehaviour
                 inventory.SetActive(false);
                 isActive = false;
                 Time.timeScale = 1;
-                PlayerFire.canShoot = true;
                 Debug.Log("인벤토리 비활성화");
             }
         }

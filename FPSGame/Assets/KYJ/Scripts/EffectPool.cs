@@ -33,7 +33,7 @@ public class EffectPool : MonoBehaviour
 
     public static BulletEffect GetObject()
     {
-        if(instance.effectPrefabQueue.Count > 0)
+        if(instance.effectPrefabQueue.Count > 0 && PlayerFire.canShoot == true)
         {
             var obj = instance.effectPrefabQueue.Dequeue();
             obj.transform.SetParent(instance.transform);

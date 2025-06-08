@@ -83,7 +83,9 @@ public class PlayerMove : MonoBehaviour
         {
             transform.Translate(Vector3.right * speed * Time.deltaTime);
         }
-
+        float x = Mathf.Clamp(transform.position.x, -24, 24);
+        float z = Mathf.Clamp(transform.position.z, -23.3f, 23.3f);
+        transform.position = new Vector3(x, transform.position.y, z); //플레이어의 이동 범위 제한
     }
 
     void Rotate()
