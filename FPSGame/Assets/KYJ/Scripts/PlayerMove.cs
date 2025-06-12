@@ -13,6 +13,7 @@ public class PlayerMove : MonoBehaviour
     private bool isJumping;
     private bool isGround;
     private int jumpCount;
+    public static int jumpTotal = 0;
     private float currentTime;
     [SerializeField] private Image speedUP; //속도 올리는 스킬의 맨 윗부분 이미지
     [SerializeField] private TextMeshProUGUI coolTimeText1; //속도 증가 쿨타임 텍스트
@@ -57,6 +58,7 @@ public class PlayerMove : MonoBehaviour
                 isJumping = true;
                 isGround = false;
                 jumpCount++;
+                jumpTotal++;
             }
             else if(isGround == false && jumpCount > 2)
             {
@@ -137,6 +139,7 @@ public class PlayerMove : MonoBehaviour
         speedUP.color = new Color(1, 1, 1, 1);
 
         isCool = false;
+        PlayerFire.plusNum++;
     }
 
 }

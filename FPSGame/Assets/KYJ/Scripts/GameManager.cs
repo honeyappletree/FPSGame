@@ -6,16 +6,25 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
+
     [SerializeField] private TextMeshProUGUI timerText;
     private float time = 120;
     private float currentTime;
     private int minute;
     private int second;
     [SerializeField] private GameObject resultPanel;
+    private float playerMin = 0;
+    public float playerSec = 0;
+    [SerializeField] TextMeshProUGUI currentTimeText; //플레이 타임을 표시하기 위한 텍스트
+    [SerializeField] TextMeshProUGUI bestTimeText; //최단 클리어 기록을 표시하기 위한 텍스트
+    [SerializeField] TextMeshProUGUI bestEnemyText; //많이 물리친 적의 수를 표시하기 위한 텍스트
+    private bool gameOver = false;
 
     // Start is called before the first frame update
     void Awake()
     {
+        instance = this;
         StartCoroutine(GameTimer());
     }
 
@@ -27,7 +36,35 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        playerSec += Time.deltaTime;
+        if(playerSec > 59)
+        {
+            playerMin++; //sec가 59보다 크게 된다면 1분 이상 시간이 흘렀다는 얘기인데 sec가 1분이 됐을 떄 0으로 정리해주면 자연스럽게 바꿀 수 있음
+            playerSec = 0;
+        }
+        currentTimeText.text = playerMin.ToString("00") + ":" + playerSec.ToString("00"); //플레이 타임을 측정하기 위함.
+
+        if(PlayerHP.currentHP > 0)
+        {
+            gameOver = false;
+            resultPanel.SetActive(false);
+        }
+        else if(PlayerHP.currentHP <= 0)
+        {
+            gameOver = true;
+            resultPanel.SetActive(true);
+        }
+        GameClear();
+
+    }
+
+    void GameClear()
+    {
+        if(EnemyFSM.dieEnemy == 1 && PlayerHP.currentHP >= 0)
+        {
+            resultPanel.SetActive(true);
+            Time.timeScale = 0;
+        }
     }
 
     IEnumerator GameTimer()

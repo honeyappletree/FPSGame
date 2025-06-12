@@ -31,9 +31,10 @@ public class EnemyFSM : MonoBehaviour
     int maxHP = 50;
     [SerializeField] private Image enemyHPBar;
     [SerializeField] private TextMeshProUGUI personText;
-    private int dieEnemy = 0; //죽인 적의 수
+    public static int dieEnemy = 0; //죽인 적의 수
     private float remainHP;
-    
+    [SerializeField] TextMeshProUGUI currentPersonText;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -78,7 +79,7 @@ public class EnemyFSM : MonoBehaviour
         {
             return;
         }
-        currentHP -= 10;
+        currentHP -= 5;
         enemyHPBar.fillAmount = (float)currentHP / (float)maxHP;
         Debug.Log("적의 currentHP: " + currentHP);
 
@@ -96,6 +97,7 @@ public class EnemyFSM : MonoBehaviour
             Die();
             dieEnemy++;
             personText.text = dieEnemy.ToString();
+            currentPersonText.text = dieEnemy.ToString();
         }
     }
 
@@ -185,8 +187,8 @@ public class EnemyFSM : MonoBehaviour
     IEnumerator DieProcess()
     {
         character.enabled = false;
-        Destroy(gameObject, 4f);
-        yield return null;
+        yield return new WaitForSeconds(2f);
+        gameObject.SetActive(false);
     }
 
     IEnumerator DamagedProcess()

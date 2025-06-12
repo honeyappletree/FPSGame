@@ -6,7 +6,7 @@ using static UnityEngine.ParticleSystem;
 public class WaterBomb : MonoBehaviour
 {
     ParticleSystem waterSplash;
-    
+
     void Awake()
     {
         waterSplash = GetComponentInChildren<ParticleSystem>();

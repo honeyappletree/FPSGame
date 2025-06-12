@@ -27,9 +27,10 @@ public class PlayerFire : MonoBehaviour
     [SerializeField] private LayerMask layerMask;
     [SerializeField] private TextMeshProUGUI currentBulletText;
     public static int currentBullet; //현재 남아있는 총알 수
-    private int maxBullet = 7; //탄환 속 최대 총알 수
+    private int maxBullet = 10; //탄환 속 최대 총알 수
     public static bool isReload;//재장전이 가능한지 여부
     [SerializeField] GameObject enemy;
+    public static int plusNum = 0; //튜토리얼에서 두 가지 스킬을 모두 사용했는지 확인하기 위함.
 
     // Start is called before the first frame update
     void Start()
@@ -97,6 +98,7 @@ public class PlayerFire : MonoBehaviour
         water.color = new Color(1, 1, 1, 1);
 
         isWater = false;
+        plusNum++;
     }
 
     void ShootGun()

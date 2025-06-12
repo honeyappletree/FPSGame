@@ -13,6 +13,7 @@ public class Slot : MonoBehaviour, IPointerClickHandler
     [SerializeField] private TextMeshProUGUI itemNameText;
     [SerializeField] private TextMeshProUGUI itemDescription;
     [SerializeField] private ItemDataBase itemDatabase;
+    public static bool useItem = false;
 
     // Start is called before the first frame update
     void Start()
@@ -79,6 +80,7 @@ public class Slot : MonoBehaviour, IPointerClickHandler
             {
                 itemDatabase.UseItem(item);
                 SetSlotCount(-1);
+                useItem = true;
                 Debug.Log("아이템을 사용했습니다.");
             }
             else if(itemImage == null)

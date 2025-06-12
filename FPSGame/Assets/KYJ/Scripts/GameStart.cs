@@ -23,7 +23,14 @@ public class GameStart : MonoBehaviour
 
     void GoLobby()
     {
-        SceneManager.LoadScene("LobbyScene");
+        if (TutorialFSM.doneTutorial == false)
+        {
+            SceneManager.LoadScene("TuturialScene");
+        }
+        else
+        {
+            SceneManager.LoadScene("LobbyScene");
+        }
     }
     
     void ActiveQuit()

@@ -9,14 +9,15 @@ public class PlayerHP : MonoBehaviour
 {
     [SerializeField] private Image hpBar;
     [SerializeField] private TextMeshProUGUI hpText;
-    private float remainHP;
-    private float maxHP = 100;
-    private float currentHP;
+    public static float remainHP;
+    public static float maxHP = 100;
+    public static float currentHP;
     [SerializeField] private GameObject resultPanel;
     [SerializeField] private GameObject warningPanel;
     private float timer = 3;
     private bool isFont = false;
-    private float recoveryHP;
+    public static float recoveryHP;
+    public static bool isRecovery = false;
 
     // Start is called before the first frame update
     void Start()
@@ -83,6 +84,7 @@ public class PlayerHP : MonoBehaviour
                 hpBar.fillAmount = currentHP / maxHP;
                 remainHP = hpBar.fillAmount * 100;
                 hpText.text = remainHP.ToString();
+                isRecovery = true;
                 StartCoroutine(FontColor());
                 Debug.Log(_count + "만큼 회복되었습니다.");
             }
@@ -94,6 +96,7 @@ public class PlayerHP : MonoBehaviour
                 hpBar.fillAmount = currentHP / maxHP;
                 remainHP = hpBar.fillAmount * 100;
                 hpText.text = remainHP.ToString();
+                isRecovery = true;
                 StartCoroutine(FontColor());
                 Debug.Log(recoveryHP + " 만큼 회복되었습니다.");
             }

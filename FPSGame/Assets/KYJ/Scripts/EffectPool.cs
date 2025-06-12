@@ -12,7 +12,7 @@ public class EffectPool : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        Initialize(7);
+        Initialize(10);
     }
 
     void Initialize(int initCount)

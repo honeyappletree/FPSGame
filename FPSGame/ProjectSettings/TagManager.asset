@@ -11,6 +11,8 @@ TagManager:
   - Enemy
   - Fire
   - WaterBomb
+  - FxTemporaire
+  - Coordinates
   layers:
   - Default
   - TransparentFX
