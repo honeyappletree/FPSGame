@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 public class TutorialFSM : MonoBehaviour
 {
@@ -80,7 +81,7 @@ public class TutorialFSM : MonoBehaviour
     {
         if(Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hitInfo, range, layerMask))
         {
-            if(hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+            if(hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Enemy1"))
             {
                 tutorialText.text = tutorialOrder[2];
             }
@@ -199,7 +200,7 @@ public class TutorialFSM : MonoBehaviour
         tutorialText.text = tutorialOrder[7];
 
         yield return new WaitUntil(() => Inventory.isActive && Slot.useItem && PlayerHP.isRecovery); //조건이 만족될 때까지 기다리기
-
+        yield return new WaitForSeconds(1f);
         tutorialText.text = tutorialOrder[9];
         t_State = Tutorial.UseSkill;
         Debug.Log("튜토리얼 다음 단계로 넘어감");
@@ -212,6 +213,7 @@ public class TutorialFSM : MonoBehaviour
         yield return new WaitForSeconds(2.5f);
         SceneManager.LoadScene("LobbyScene");
         doneTutorial = true;
+        Debug.Log("데이터가 저장되었습니다.");
     }
     private void OnCollisionEnter(Collision collision)
     {

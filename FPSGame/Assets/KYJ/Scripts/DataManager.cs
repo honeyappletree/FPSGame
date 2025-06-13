@@ -3,23 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
-[System.Serializable]
-public class SaveData
-{
-    public bool tutorial;
-    public int bestEnemyHit;
-    public float bestPlaytime;
-}
-
 public class DataManager : MonoBehaviour
 {
-    string path;
+    public static DataManager instance;
+    public static string path;
+    public static SaveData saveData;
 
     // Start is called before the first frame update
     void Start()
     {
-        path = Path.Combine(Application.dataPath, "database.json");
+        path = Application.persistentDataPath + "/playerdata.json";
         JsonLoad();
+        Debug.Log("저장 경로: " + path);
     }
 
     public void JsonLoad()
@@ -42,6 +37,7 @@ public class DataManager : MonoBehaviour
                 EnemyFSM.dieEnemy = saveData.bestEnemyHit;
                 TutorialFSM.doneTutorial = saveData.tutorial;
                 GameManager.instance.playerSec = saveData.bestPlaytime;
+                GameManager.instance.perfectGame = saveData.gameClear;
             }
         }
     }
@@ -51,13 +47,20 @@ public class DataManager : MonoBehaviour
         SaveData saveData = new SaveData();
 
         saveData.tutorial = TutorialFSM.doneTutorial;
-        if(saveData.bestPlaytime > GameManager.instance.playerSec)
+        saveData.gameClear = GameManager.instance.perfectGame;
+
+        if(saveData.gameClear == 1)
         {
             saveData.bestPlaytime = GameManager.instance.playerSec;
-        }
-        if(saveData.bestEnemyHit < EnemyFSM.dieEnemy)
-        {
             saveData.bestEnemyHit = EnemyFSM.dieEnemy;
+        }
+        else if(saveData.gameClear >= 2)
+        {
+            if(EnemyFSM.dieEnemy > saveData.bestEnemyHit)
+            {
+                saveData.bestEnemyHit = EnemyFSM.dieEnemy;
+                saveData.bestPlaytime = GameManager.instance.playerSec;
+            }
         }
 
         string json = JsonUtility.ToJson(saveData, true);
@@ -69,4 +72,13 @@ public class DataManager : MonoBehaviour
     {
         
     }
+}
+
+[System.Serializable]
+public class SaveData
+{
+    public bool tutorial;
+    public int bestEnemyHit;
+    public float bestPlaytime;
+    public int gameClear;
 }

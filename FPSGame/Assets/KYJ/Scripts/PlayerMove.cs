@@ -30,7 +30,6 @@ public class PlayerMove : MonoBehaviour
         speedUP.GetComponent<Image>();
         coolTimeText1.alpha = 0;
         currentTime = coolTime;
-        transform.Translate(0, 1, -11);
     }
 
     // Update is called once per frame
@@ -85,8 +84,8 @@ public class PlayerMove : MonoBehaviour
         {
             transform.Translate(Vector3.right * speed * Time.deltaTime);
         }
-        float x = Mathf.Clamp(transform.position.x, -24, 24);
-        float z = Mathf.Clamp(transform.position.z, -23.3f, 23.3f);
+        float x = Mathf.Clamp(transform.position.x, -35.82f, -5.1f);  
+        float z = Mathf.Clamp(transform.position.z, -10.03f, 16.1f);   
         transform.position = new Vector3(x, transform.position.y, z); //플레이어의 이동 범위 제한
     }
 

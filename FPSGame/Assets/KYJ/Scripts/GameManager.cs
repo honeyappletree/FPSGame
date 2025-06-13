@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,7 +10,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     [SerializeField] private TextMeshProUGUI timerText;
-    private float time = 120;
+    private float time = 150; //제한 시간: 2분 30초
     private float currentTime;
     private int minute;
     private int second;
@@ -20,6 +21,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI bestTimeText; //최단 클리어 기록을 표시하기 위한 텍스트
     [SerializeField] TextMeshProUGUI bestEnemyText; //많이 물리친 적의 수를 표시하기 위한 텍스트
     private bool gameOver = false;
+    public int perfectGame = 0;
 
     // Start is called before the first frame update
     void Awake()
@@ -60,10 +62,12 @@ public class GameManager : MonoBehaviour
 
     void GameClear()
     {
-        if(EnemyFSM.dieEnemy == 1 && PlayerHP.currentHP >= 0)
+        if(EnemyFSM.dieEnemy == 2 && PlayerHP.currentHP >= 0)
         {
             resultPanel.SetActive(true);
             Time.timeScale = 0;
+            perfectGame++;
+            Debug.Log("perfectGame: " + perfectGame);
         }
     }
 

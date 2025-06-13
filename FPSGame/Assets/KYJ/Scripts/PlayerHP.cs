@@ -126,7 +126,7 @@ public class PlayerHP : MonoBehaviour
             Time.timeScale = 1; //폰트 색은 일시정지 되는 것과 관계없이 인벤토리 활성화된 상태에서도 변화를 주기 위해서
             yield return null;
         }
-        hpText.color = Color.black;
-        Debug.Log("폰트 색이 검은색으로 변하였습니다.");
+        hpText.color = Color.white;
+        Debug.Log("폰트 색이 흰색으로 변하였습니다.");
     }
 }

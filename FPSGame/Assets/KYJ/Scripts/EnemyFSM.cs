@@ -21,7 +21,7 @@ public class EnemyFSM : MonoBehaviour
     [SerializeField] private Transform player;
     [SerializeField] private float attackDistance = 2f; //공격이 가능한 거리 범위
     [SerializeField] private float moveSpeed = 5f;
-    CharacterController character;
+    Rigidbody rigid;
     float attackDelay = 2f;
     float currentTime = 0;
     Vector3 originPosition; //Enemy가 원래 위치해있던 좌표
@@ -42,7 +42,7 @@ public class EnemyFSM : MonoBehaviour
         currentHP = maxHP;
         originPosition = transform.position;
         originRotation = transform.rotation;
-        character = GetComponent<CharacterController>();
+        rigid = GetComponent<Rigidbody>();
         enemyHPBar = enemyHPBar.GetComponent<Image>();
     }
 
@@ -120,7 +120,7 @@ public class EnemyFSM : MonoBehaviour
         else if(Vector3.Distance(transform.position, player.position) > attackDistance)
         {
             Vector3 dir = (player.position - transform.position).normalized;
-            character.Move(dir * moveSpeed * Time.deltaTime);
+            transform.position += dir * moveSpeed * Time.deltaTime;
             transform.forward = dir;
         }
         else
@@ -161,7 +161,7 @@ public class EnemyFSM : MonoBehaviour
         if(Vector3.Distance(transform.position, originPosition) > 0.1f)
         {
             Vector3 dir = (originPosition - transform.position).normalized;
-            character.Move(dir * moveSpeed * Time.deltaTime);
+            transform.position += dir * moveSpeed * Time.deltaTime;
             transform.forward = dir;
         }
         else
@@ -186,9 +186,8 @@ public class EnemyFSM : MonoBehaviour
 
     IEnumerator DieProcess()
     {
-        character.enabled = false;
-        yield return new WaitForSeconds(2f);
-        gameObject.SetActive(false);
+        Destroy(gameObject, 2f);
+        yield return null;
     }
 
     IEnumerator DamagedProcess()

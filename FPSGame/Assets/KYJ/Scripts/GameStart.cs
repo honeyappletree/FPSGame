@@ -25,7 +25,7 @@ public class GameStart : MonoBehaviour
     {
         if (TutorialFSM.doneTutorial == false)
         {
-            SceneManager.LoadScene("TuturialScene");
+            SceneManager.LoadScene("TutorialScene");
         }
         else
         {
