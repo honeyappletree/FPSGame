@@ -70,6 +70,7 @@ public class PlayerHP : MonoBehaviour
         {
             resultPanel.SetActive(true);
             warningPanel.SetActive(false);
+            GameManager.instance.ManualGameClear();
             Time.timeScale = 0;
         }
     }

@@ -151,7 +151,7 @@ public class TutorialFSM : MonoBehaviour
                     isDamaged = true;
                 }
 
-                if (Inventory.isActive == true && Slot.useItem == true && PlayerHP.isRecovery == true)
+                if (Slot.useItem == true && PlayerHP.isRecovery == true)
                 {
                     tutorialText.text = tutorialOrder[9];
                     t_State = Tutorial.UseSkill;
@@ -199,7 +199,7 @@ public class TutorialFSM : MonoBehaviour
 
         tutorialText.text = tutorialOrder[7];
 
-        yield return new WaitUntil(() => Inventory.isActive && Slot.useItem && PlayerHP.isRecovery); //조건이 만족될 때까지 기다리기
+        yield return new WaitUntil(() =>  Slot.useItem && PlayerHP.isRecovery); //조건이 만족될 때까지 기다리기
         yield return new WaitForSeconds(1f);
         tutorialText.text = tutorialOrder[9];
         t_State = Tutorial.UseSkill;
@@ -213,7 +213,13 @@ public class TutorialFSM : MonoBehaviour
         yield return new WaitForSeconds(2.5f);
         SceneManager.LoadScene("LobbyScene");
         doneTutorial = true;
-        Debug.Log("데이터가 저장되었습니다.");
+
+        if (File.Exists(DataManager.instance.path)) //데이터가 있는 경우
+        {
+            DataManager.instance.player1.tutorial = doneTutorial;
+            DataManager.instance.SaveData();
+            Debug.Log("tutorial 여부: " + DataManager.instance.player1.tutorial);
+        }
     }
     private void OnCollisionEnter(Collision collision)
     {

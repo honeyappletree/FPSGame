@@ -44,7 +44,7 @@ public class PlayerMove : MonoBehaviour
             isCool = true;
             currentTime = coolTime;
             StartCoroutine(SkillCooltime());
-        }
+        };
     }
 
     void Jump()
@@ -94,7 +94,7 @@ public class PlayerMove : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X");
         mouse_X += mouseX * speed * Time.deltaTime;
         transform.eulerAngles = new Vector3(0, mouse_X, 0);
-    }
+    } 
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -105,7 +105,6 @@ public class PlayerMove : MonoBehaviour
             jumpCount = 0;
         }
     }
-
     
     IEnumerator SkillCooltime()
     {

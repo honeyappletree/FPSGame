@@ -2,83 +2,54 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.IO.Enumeration;
+
+[System.Serializable]
+public class PlayerData
+{
+    public bool tutorial; //튜토리얼 클리어 여부
+    public int bestEnemyHit = 0; //제일 많이 무찌른 적의 수
+    public float bestPlaytime = 0; //제일 빠르게 게임을 클리어한 시간
+    public int gameClear = 0; //게임을 클리어했는지 여부
+}
 
 public class DataManager : MonoBehaviour
 {
     public static DataManager instance;
-    public static string path;
-    public static SaveData saveData;
+    public PlayerData player1 = new PlayerData();
+    public string path; //파일 경로를 지정해주기 위함
+
+    private void Awake()
+    {
+        if(instance == null)
+        {
+            instance = this;
+        }
+        else if(instance != this)
+        {
+            Destroy(instance.gameObject);
+        }
+        DontDestroyOnLoad(this.gameObject);
+
+        path = Application.persistentDataPath + "/save"; //유니티가 알아서 현재 프로젝트의 개별 경로를 할당함.
+        Debug.Log(path);
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        path = Application.persistentDataPath + "/playerdata.json";
-        JsonLoad();
-        Debug.Log("저장 경로: " + path);
-    }
-
-    public void JsonLoad()
-    {
-        SaveData saveData = new SaveData();
-
-        if(File.Exists(path) == false)
-        {
-            GameManager.instance.playerSec = 0;
-            EnemyFSM.dieEnemy = 0;
-            JsonSave();
-        }
-        else
-        {
-            string loadJson = File.ReadAllText(path);
-            saveData = JsonUtility.FromJson<SaveData>(loadJson);
-
-            if(saveData != null)
-            {
-                EnemyFSM.dieEnemy = saveData.bestEnemyHit;
-                TutorialFSM.doneTutorial = saveData.tutorial;
-                GameManager.instance.playerSec = saveData.bestPlaytime;
-                GameManager.instance.perfectGame = saveData.gameClear;
-            }
-        }
-    }
-
-    public void JsonSave()
-    {
-        SaveData saveData = new SaveData();
-
-        saveData.tutorial = TutorialFSM.doneTutorial;
-        saveData.gameClear = GameManager.instance.perfectGame;
-
-        if(saveData.gameClear == 1)
-        {
-            saveData.bestPlaytime = GameManager.instance.playerSec;
-            saveData.bestEnemyHit = EnemyFSM.dieEnemy;
-        }
-        else if(saveData.gameClear >= 2)
-        {
-            if(EnemyFSM.dieEnemy > saveData.bestEnemyHit)
-            {
-                saveData.bestEnemyHit = EnemyFSM.dieEnemy;
-                saveData.bestPlaytime = GameManager.instance.playerSec;
-            }
-        }
-
-        string json = JsonUtility.ToJson(saveData, true);
-        File.WriteAllText(path, json);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
         
     }
-}
 
-[System.Serializable]
-public class SaveData
-{
-    public bool tutorial;
-    public int bestEnemyHit;
-    public float bestPlaytime;
-    public int gameClear;
+    public void SaveData() //데이터 저장하기
+    {
+        string playData = JsonUtility.ToJson(player1);
+        File.WriteAllText(path, playData);
+    }
+
+    public void LoadData() //데이터 불러오기
+    {
+        string playData = File.ReadAllText(path);
+        player1 = JsonUtility.FromJson<PlayerData>(playData);
+    }
 }

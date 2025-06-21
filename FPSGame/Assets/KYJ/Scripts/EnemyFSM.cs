@@ -44,6 +44,7 @@ public class EnemyFSM : MonoBehaviour
         originRotation = transform.rotation;
         rigid = GetComponent<Rigidbody>();
         enemyHPBar = enemyHPBar.GetComponent<Image>();
+        dieEnemy = 0;
     }
 
     // Update is called once per frame
@@ -96,6 +97,10 @@ public class EnemyFSM : MonoBehaviour
             Debug.Log("Any State -> Die");
             Die();
             dieEnemy++;
+            if (dieEnemy == 2)
+            {
+                GameManager.instance.ManualGameClear();
+            }
             personText.text = dieEnemy.ToString();
             currentPersonText.text = dieEnemy.ToString();
         }

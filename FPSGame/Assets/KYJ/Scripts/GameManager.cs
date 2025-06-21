@@ -1,105 +1,98 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    [SerializeField] private TextMeshProUGUI timerText;
-    private float time = 150; //제한 시간: 2분 30초
-    private float currentTime;
-    private int minute;
-    private int second;
-    [SerializeField] private GameObject resultPanel;
-    private float playerMin = 0;
-    public float playerSec = 0;
-    [SerializeField] TextMeshProUGUI currentTimeText; //플레이 타임을 표시하기 위한 텍스트
-    [SerializeField] TextMeshProUGUI bestTimeText; //최단 클리어 기록을 표시하기 위한 텍스트
-    [SerializeField] TextMeshProUGUI bestEnemyText; //많이 물리친 적의 수를 표시하기 위한 텍스트
-    private bool gameOver = false;
-    public int perfectGame = 0;
+    [SerializeField] float totalTime = 90f;
+    private float startTime;
+    private float endTime;
+    int bestMin;
+    int bestSec;
 
-    // Start is called before the first frame update
+    [SerializeField] TextMeshProUGUI timerText;
+    [SerializeField] TextMeshProUGUI bestTimeText;
+    [SerializeField] TextMeshProUGUI bestEnemyText;
+    [SerializeField] TextMeshProUGUI currentTimeText;
+
+    [SerializeField] GameObject resultPanel;
+    int perfectGame = 0;
+
+    private bool gameEnded = false;
+
     void Awake()
     {
         instance = this;
-        StartCoroutine(GameTimer());
+        DataManager.instance.LoadData();
     }
 
     void Start()
     {
         resultPanel.SetActive(false);
+        StartCoroutine(StartTimer());
     }
 
-    // Update is called once per frame
-    void Update()
+    IEnumerator StartTimer()
     {
-        playerSec += Time.deltaTime;
-        if(playerSec > 59)
+        yield return null; // 한 프레임 대기 (씬 완전 로딩 후 정확한 시간 설정)
+        startTime = Time.time;
+        endTime = startTime + totalTime;
+
+        while (Time.time < endTime && !gameEnded)
         {
-            playerMin++; //sec가 59보다 크게 된다면 1분 이상 시간이 흘렀다는 얘기인데 sec가 1분이 됐을 떄 0으로 정리해주면 자연스럽게 바꿀 수 있음
-            playerSec = 0;
-        }
-        currentTimeText.text = playerMin.ToString("00") + ":" + playerSec.ToString("00"); //플레이 타임을 측정하기 위함.
+            float remaining = endTime - Time.time;
+            int min = Mathf.FloorToInt(remaining / 60f);
+            int sec = Mathf.FloorToInt(remaining % 60f);
 
-        if(PlayerHP.currentHP > 0)
-        {
-            gameOver = false;
-            resultPanel.SetActive(false);
-        }
-        else if(PlayerHP.currentHP <= 0)
-        {
-            gameOver = true;
-            resultPanel.SetActive(true);
-        }
-        GameClear();
+            timerText.text = min.ToString("00") + ":" + sec.ToString("00");
 
-    }
-
-    void GameClear()
-    {
-        if(EnemyFSM.dieEnemy == 2 && PlayerHP.currentHP >= 0)
-        {
-            resultPanel.SetActive(true);
-            Time.timeScale = 0;
-            perfectGame++;
-            Debug.Log("perfectGame: " + perfectGame);
-        }
-    }
-
-    IEnumerator GameTimer()
-    {
-        currentTime = time;
-
-        while (currentTime >= 0)
-        {
-            currentTime -= Time.deltaTime;
-
-            minute = (int)currentTime / 60; //currentTime을 60으로 나눈 값의 몫을 표시함.
-            second = (int)currentTime % 60; //currentTime을 60으로 나눈 값의 나머지를 표시함.
-
-            timerText.text = minute.ToString("00") + ":" + second.ToString("00");
-            yield return null;
-
-            if (currentTime <= 31) //30초 이하면 텍스트가 빨간색으로 변하도록 함.
-            {
+            if (remaining <= 30f)
                 timerText.color = Color.red;
-            }
 
-            if (currentTime <= 0)
-            {
-                resultPanel.SetActive(true);
-                Time.timeScale = 0;
-
-                yield break;
-            }
-            
+            yield return null;
         }
-        
+
+        EndGame(); // 시간 다 되면 자동 종료
     }
 
+    public void EndGame()
+    {
+        if (gameEnded) return; // 중복 방지
+        gameEnded = true;
+
+        resultPanel.SetActive(true);
+        Time.timeScale = 0f;
+
+        float elapsed = Time.time - startTime;
+        int playMin = Mathf.FloorToInt(elapsed / 60f);
+        int playSec = Mathf.FloorToInt(elapsed % 60f);
+        currentTimeText.text = playMin.ToString("00") + ":" + playSec.ToString("00");
+
+        // 최고 기록 비교 및 저장
+        if (DataManager.instance.player1.bestPlaytime == 0f || elapsed < DataManager.instance.player1.bestPlaytime || EnemyFSM.dieEnemy > DataManager.instance.player1.bestEnemyHit)
+        {
+            DataManager.instance.player1.bestPlaytime = elapsed;
+            DataManager.instance.SaveData();
+        }
+        if(DataManager.instance.player1.bestEnemyHit == 0 || EnemyFSM.dieEnemy > DataManager.instance.player1.bestEnemyHit)
+        {
+            DataManager.instance.player1.bestEnemyHit = EnemyFSM.dieEnemy;
+            DataManager.instance.SaveData();
+        }
+
+        // 텍스트 갱신
+        bestMin = Mathf.FloorToInt(DataManager.instance.player1.bestPlaytime / 60f);
+        bestSec = Mathf.FloorToInt(DataManager.instance.player1.bestPlaytime % 60f);
+        bestTimeText.text = bestMin.ToString("00") + ":" + bestSec.ToString("00");
+        int bestEnemy = DataManager.instance.player1.bestEnemyHit;
+        bestEnemyText.text = bestEnemy.ToString();
+    }
+
+    public void ManualGameClear() // 적 처치 등으로 수동 종료할 경우 호출
+    {
+        EndGame();
+    }
 }

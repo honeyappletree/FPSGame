@@ -22,6 +22,8 @@ public class Result : MonoBehaviour
 
     void GameFinish()
     {
-        SceneManager.LoadScene("LobbyScene");
+        Time.timeScale = 1;
+        SceneManager.LoadScene("SampleScene");
+        Debug.Log("데이터를 불러왔습니다.");
     }
 }

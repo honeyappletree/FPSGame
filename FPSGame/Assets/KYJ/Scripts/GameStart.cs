@@ -23,6 +23,7 @@ public class GameStart : MonoBehaviour
 
     void GoLobby()
     {
+        Time.timeScale = 1;
         if (TutorialFSM.doneTutorial == false)
         {
             SceneManager.LoadScene("TutorialScene");

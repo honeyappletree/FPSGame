@@ -54,6 +54,7 @@ public class Loading : MonoBehaviour
                     {
                         timer += Time.deltaTime;
                         Debug.Log("timer: " + timer);
+                        Debug.Log("process: " + op.progress);
                     }
                 }
                 else
@@ -69,7 +70,7 @@ public class Loading : MonoBehaviour
                 }
                 
                 yield return new WaitForSeconds(0.2f);
-                yield return null;
+                //yield return null;
             }
         }
     }
