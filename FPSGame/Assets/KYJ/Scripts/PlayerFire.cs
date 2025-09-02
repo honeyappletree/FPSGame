@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 using UnityEngine.UI;
-using UnityEditor.PackageManager;
 
 public class PlayerFire : MonoBehaviour
 {
