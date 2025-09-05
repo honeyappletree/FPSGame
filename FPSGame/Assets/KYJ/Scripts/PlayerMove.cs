@@ -8,7 +8,8 @@ public class PlayerMove : MonoBehaviour
 {
     private Rigidbody rigid;
     [SerializeField] private int jumpPower;
-    [SerializeField] private int speed = 6;
+    [SerializeField] private int speed = 10;
+    private int ySpeed = 80; //마우스 x좌표의 속도
     private bool isJumping;
     private bool isGround;
     private int jumpCount;
@@ -91,7 +92,7 @@ public class PlayerMove : MonoBehaviour
     void Rotate()
     {
         float mouseX = Input.GetAxis("Mouse X");
-        mouse_X += mouseX * speed * Time.deltaTime;
+        mouse_X += mouseX * ySpeed * Time.deltaTime;
         transform.eulerAngles = new Vector3(0, mouse_X, 0);
     } 
 
@@ -113,7 +114,7 @@ public class PlayerMove : MonoBehaviour
         while(speedTimer > 0)
         {
             speedTimer -= Time.deltaTime;
-            speed = 12;
+            speed = 14;
             Debug.Log("speed: " + speed);
             yield return null;
         }
