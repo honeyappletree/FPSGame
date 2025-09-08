@@ -5,7 +5,7 @@ using UnityEngine;
 public class ScreenMove : MonoBehaviour
 {
     private float mouse_Y;
-    [SerializeField] private float speed = 120f;
+    [SerializeField] private float speed = 130f;
 
     // Start is called before the first frame update
     void Start()

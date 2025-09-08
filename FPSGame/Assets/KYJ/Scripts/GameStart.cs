@@ -24,9 +24,9 @@ public class GameStart : MonoBehaviour
     void GoLobby()
     {
         Time.timeScale = 1;
-        if (TutorialFSM.doneTutorial == false)
+        if (Story.doneStory == false)
         {
-            SceneManager.LoadScene("TutorialScene");
+            SceneManager.LoadScene("StoryScene");
         }
         else
         {

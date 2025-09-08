@@ -9,6 +9,7 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private Button playButton; //게임 플레이 버튼
     [SerializeField] private Button tutorialButton; //튜토리얼 버튼
     [SerializeField] private Button undoButton; //게임 첫화면 씬으로 돌아가는 버튼
+    [SerializeField] private Button storyButton; //스토리 씬으로 가는 버튼
 
     // Start is called before the first frame update
     void Start()
@@ -16,6 +17,7 @@ public class LobbyManager : MonoBehaviour
         playButton.onClick.AddListener(GamePlay);
         tutorialButton.onClick.AddListener(GoTutorial);
         undoButton.onClick.AddListener(Undo);
+        storyButton.onClick.AddListener(Story);
     }
 
     void GamePlay() //게임 플레이 버튼을 눌렀을 때
@@ -31,6 +33,11 @@ public class LobbyManager : MonoBehaviour
     void Undo() //게임 첫화면 씬으로 돌아가는 버튼을 눌렀을 때
     {
         SceneManager.LoadScene("SampleScene");
+    }
+
+    void Story() //스토리 버튼을 눌렀을 때
+    {
+        SceneManager.LoadScene("StoryScene");
     }
 
 }

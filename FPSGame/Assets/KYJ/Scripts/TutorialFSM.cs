@@ -79,7 +79,7 @@ public class TutorialFSM : MonoBehaviour
 
     void MoveView()
     {
-        if(Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hitInfo, range, layerMask))
+        if(Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hitInfo, layerMask))
         {
             if(hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Enemy1"))
             {

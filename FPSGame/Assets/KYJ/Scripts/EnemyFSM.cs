@@ -173,6 +173,19 @@ public class EnemyFSM : MonoBehaviour
                 currentHP -= 5;
                 enemyHPBar.fillAmount = (float)currentHP / (float)maxHP;            
             }
+            if(currentHP <= 0)
+            {
+                e_State = EnemyState.Die;
+                Debug.Log("Any State -> Die");
+                Die();
+                dieEnemy++;
+                if (dieEnemy == 2)
+                {
+                    GameManager.instance.ManualGameClear();
+                }
+                personText.text = dieEnemy.ToString();
+                currentPersonText.text = dieEnemy.ToString();
+            }
         }
         else
         {
@@ -180,6 +193,12 @@ public class EnemyFSM : MonoBehaviour
             transform.rotation = originRotation;
             e_State = EnemyState.Idle;
             Debug.Log("Return -> Idle");
+        }
+
+        if (currentHP <= 0)
+        {
+            StopAllCoroutines();
+            StartCoroutine(DieProcess());
         }
     }
 
