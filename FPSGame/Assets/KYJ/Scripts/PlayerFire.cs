@@ -101,7 +101,7 @@ public class PlayerFire : MonoBehaviour
 
     void ShootGun()
     {
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hitInfo, range, layerMask[0]))
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hitInfo, layerMask[0]))
         {
             if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Enemy1"))
             {
@@ -141,13 +141,13 @@ public class PlayerFire : MonoBehaviour
                 }
             }
         }
-        else
-        {
-            canShoot = false;
-            Debug.Log("적 외에는 총을 사용할 수 없습니다.");
-        }
+        //else
+        //{
+        //    canShoot = false;
+        //    Debug.Log("적 외에는 총을 사용할 수 없습니다.");
+        //}
 
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hitInfo, range, layerMask[1]))
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hitInfo, layerMask[1]))
         {
             if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Enemy2"))
             {
@@ -187,11 +187,11 @@ public class PlayerFire : MonoBehaviour
                 }
             }
         }
-        else
-        {
-            canShoot = false;
-            Debug.Log("적 외에는 총을 사용할 수 없습니다.");
-        }
+    //    else
+    //    {
+    //        canShoot = false;
+    //        Debug.Log("적 외에는 총을 사용할 수 없습니다.");
+    //    }
     }
 
     IEnumerator GunReload()

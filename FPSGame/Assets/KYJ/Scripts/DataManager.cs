@@ -24,12 +24,12 @@ public class DataManager : MonoBehaviour
         if(instance == null)
         {
             instance = this;
+            DontDestroyOnLoad(this.gameObject);
         }
         else if(instance != this)
         {
             Destroy(instance.gameObject);
         }
-        DontDestroyOnLoad(this.gameObject);
 
         path = Application.persistentDataPath + "/save"; //유니티가 알아서 현재 프로젝트의 개별 경로를 할당함.
         Debug.Log(path);

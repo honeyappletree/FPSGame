@@ -71,7 +71,6 @@ public class EnemyFSM : MonoBehaviour
                 Die();
                 break;
         }
-
     }
 
     public void HitEnemy()
@@ -168,6 +167,12 @@ public class EnemyFSM : MonoBehaviour
             Vector3 dir = (originPosition - transform.position).normalized;
             transform.position += dir * moveSpeed * Time.deltaTime;
             transform.forward = dir;
+
+            if (Input.GetMouseButtonDown(0) && PlayerFire.currentBullet > 0 && PlayerFire.isReload == false) //적이 리턴 상태여도 공격을 당하면 5 데미지를 입음
+            {
+                currentHP -= 5;
+                enemyHPBar.fillAmount = (float)currentHP / (float)maxHP;            
+            }
         }
         else
         {

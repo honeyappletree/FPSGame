@@ -8,8 +8,8 @@ public class PlayerMove : MonoBehaviour
 {
     private Rigidbody rigid;
     [SerializeField] private int jumpPower;
-    [SerializeField] private int speed = 10;
-    private int ySpeed = 80; //마우스 x좌표의 속도
+    [SerializeField] private int speed = 10; //플레이어의 이동 속도
+    private int ySpeed = 120; //마우스 x좌표의 속도
     private bool isJumping;
     private bool isGround;
     private int jumpCount;
@@ -30,11 +30,14 @@ public class PlayerMove : MonoBehaviour
         speedUP.GetComponent<Image>();
         coolTimeText1.alpha = 0;
         currentTime = coolTime;
+        speed = 10;
     }
 
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("player's speed: " + speed);
+
         Move();
         Jump();
         Rotate();
@@ -114,11 +117,11 @@ public class PlayerMove : MonoBehaviour
         while(speedTimer > 0)
         {
             speedTimer -= Time.deltaTime;
-            speed = 14;
+            speed = 14; //스킬 발동하는 동안 플레이어의 속도: 14
             Debug.Log("speed: " + speed);
             yield return null;
         }
-        speed = 6;
+        speed = 10; //스킬 시간이 지나고 나면 플레이어의 속도는 10
         Debug.Log("쿨타임 시작" + ", speed는 " + speed);
 
         while(currentTime > 0)
