@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     {
         resultPanel.SetActive(false);
         StartCoroutine(StartTimer());
+        Cursor.visible = false;
     }
 
     IEnumerator StartTimer()

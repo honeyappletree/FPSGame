@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class PlayerFire : MonoBehaviour
 {
     private float currentTime;
-    [SerializeField] private TextMeshProUGUI coolTimeText2; //물폭탄 쿨타임 텍스트
+    [SerializeField] private Text coolTimeText2; //물폭탄 쿨타임 텍스트
     private float coolTime = 5;
     private float waterF; //ui 연출을 위한 변수
     private bool isWater = false; //쿨타임 true, false 여부
@@ -23,7 +23,7 @@ public class PlayerFire : MonoBehaviour
     public static bool canShoot = false; //총을 쏠 수 있는지에 대한 여부
     private RaycastHit hitInfo;
     [SerializeField] private LayerMask[] layerMask;
-    [SerializeField] private TextMeshProUGUI currentBulletText;
+    [SerializeField] private Text currentBulletText;
     public static int currentBullet; //현재 남아있는 총알 수
     private int maxBullet = 10; //탄환 속 최대 총알 수
     public static bool isReload;//재장전이 가능한지 여부
@@ -33,7 +33,7 @@ public class PlayerFire : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        coolTimeText2.alpha = 0;
+        coolTimeText2.color = new Color(1, 1, 1, 0);
         currentTime = coolTime;
         water.GetComponent<Image>();
         currentBullet = maxBullet;
@@ -87,12 +87,12 @@ public class PlayerFire : MonoBehaviour
             water.color = new Color(0.67f, 0.67f, 0.67f, 1);
             water.fillAmount = (int)currentTime / coolTime;
             waterF = water.fillAmount * 5;
-            coolTimeText2.alpha = 1;
+            coolTimeText2.color = new Color(0, 0, 0, 255);
             coolTimeText2.text = waterF.ToString();
 
             yield return null;
         }
-        coolTimeText2.alpha = 0;
+        coolTimeText2.color = new Color(0, 0, 0, 0);
         water.color = new Color(1, 1, 1, 1);
 
         isWater = false;

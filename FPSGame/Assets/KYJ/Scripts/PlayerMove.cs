@@ -16,7 +16,7 @@ public class PlayerMove : MonoBehaviour
     public static int jumpTotal = 0;
     private float currentTime;
     [SerializeField] private Image speedUP; //속도 올리는 스킬의 맨 윗부분 이미지
-    [SerializeField] private TextMeshProUGUI coolTimeText1; //속도 증가 쿨타임 텍스트
+    [SerializeField] private Text coolTimeText1; //속도 증가 쿨타임 텍스트
     public static float mouse_X; //플레이어가 mouse를 좌우로 움직이면 회전하기 위함.
     private float speedUp;
     private bool isCool = false;
@@ -28,7 +28,7 @@ public class PlayerMove : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody>();
         speedUP.GetComponent<Image>();
-        coolTimeText1.alpha = 0;
+        coolTimeText1.color = new Color(1, 1, 1, 0);
         currentTime = coolTime;
         speed = 10;
     }
@@ -47,7 +47,7 @@ public class PlayerMove : MonoBehaviour
             isCool = true;
             currentTime = coolTime;
             StartCoroutine(SkillCooltime());
-        };
+        }
     }
 
     void Jump()
@@ -131,16 +131,15 @@ public class PlayerMove : MonoBehaviour
             speedUP.color = new Color(0.67f, 0.67f, 0.67f, 1);
             speedUP.fillAmount = (int)currentTime / coolTime;
             speedUp = speedUP.fillAmount * 5;
-            coolTimeText1.alpha = 1;
+            coolTimeText1.color = new Color(0.7490196f, 0.3568628f, 0.02352941f , 1f);
             coolTimeText1.text = speedUp.ToString();
 
             yield return null;
         }
-        coolTimeText1.alpha = 0;
+        coolTimeText1.color = new Color(1, 1, 1, 0);
         speedUP.color = new Color(1, 1, 1, 1);
 
         isCool = false;
         PlayerFire.plusNum++;
     }
-
 }

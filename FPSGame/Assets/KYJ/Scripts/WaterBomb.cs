@@ -6,10 +6,12 @@ using static UnityEngine.ParticleSystem;
 public class WaterBomb : MonoBehaviour
 {
     ParticleSystem waterSplash;
+    AudioSource waterSound;
 
     void Awake()
     {
         waterSplash = GetComponentInChildren<ParticleSystem>();
+        waterSound = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -23,6 +25,7 @@ public class WaterBomb : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             waterSplash.Play();
+            waterSound.Play();
             Invoke("DestroyWater", 0.3f);
         }
     }

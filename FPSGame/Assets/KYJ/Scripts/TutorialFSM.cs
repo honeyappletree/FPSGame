@@ -27,7 +27,7 @@ public class TutorialFSM : MonoBehaviour
     [SerializeField] private float range; //상황별 거리 측정
     [SerializeField] private LayerMask layerMask;
     [SerializeField] private Image hpBar;
-    [SerializeField] private TextMeshProUGUI hpText;
+    [SerializeField] private Text hpText;
     float remainHP;
     [SerializeField] GameObject player;
     public static bool isDamaged = false;
@@ -38,6 +38,7 @@ public class TutorialFSM : MonoBehaviour
     {
         t_State = Tutorial.Idle;
         tutorialText.text = tutorialOrder[0];
+        Cursor.visible = false; //마우스 커서가 보이지 않게 하기 위함.
     }
 
     // Update is called once per frame

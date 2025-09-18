@@ -8,7 +8,7 @@ using UnityEngine.SocialPlatforms;
 public class PlayerHP : MonoBehaviour
 {
     [SerializeField] private Image hpBar;
-    [SerializeField] private TextMeshProUGUI hpText;
+    [SerializeField] private Text hpText;
     public static float remainHP;
     public static float maxHP = 100;
     public static float currentHP;

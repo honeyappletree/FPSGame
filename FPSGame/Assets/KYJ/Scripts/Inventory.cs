@@ -34,6 +34,7 @@ public class Inventory : MonoBehaviour
             if (isActive == false)
             {
                 inventory.SetActive(true);
+                Cursor.visible = true;
                 isActive = true;
                 Time.timeScale = 0;
                 Debug.Log("인벤토리 활성화");
@@ -41,6 +42,7 @@ public class Inventory : MonoBehaviour
             else if (isActive == true)
             {
                 inventory.SetActive(false);
+                Cursor.visible = false;
                 isActive = false;
                 Time.timeScale = 1;
                 Debug.Log("인벤토리 비활성화");
