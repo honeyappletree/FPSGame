@@ -27,11 +27,12 @@ public class Pause : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Escape))
         {
-            if(isActive != true)
+            if(isActive != true) //일시정지 상태가 아닐 때
             {
                 Pausepanel.SetActive(true);
                 Time.timeScale = 0;
                 isActive = true;
+                Cursor.visible = true;
                 Debug.Log("판넬 활성화");
             }
             else if(isActive == true)
@@ -39,6 +40,7 @@ public class Pause : MonoBehaviour
                 Pausepanel.SetActive(false);
                 Time.timeScale = 1;
                 isActive = false;
+                Cursor.visible = false;
                 Debug.Log("판넬 비활성화");
             }
         }

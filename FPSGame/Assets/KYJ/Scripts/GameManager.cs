@@ -65,6 +65,7 @@ public class GameManager : MonoBehaviour
         gameEnded = true;
 
         resultPanel.SetActive(true);
+        Cursor.visible = true;
         Time.timeScale = 0f;
 
         float elapsed = Time.time - startTime;

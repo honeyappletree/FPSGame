@@ -5,14 +5,15 @@ using TMPro;
 using UnityEngine.UI;
 using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
-public class Story : MonoBehaviour
+public class Story : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] [TextArea] string[] dialogue; //대화 배열
-    [SerializeField] TextMeshProUGUI dialogueText; //대화 텍스트
+    [SerializeField] Text dialogueText; //대화 텍스트
     [SerializeField] string[] name; //캐릭터 이름 배열
-    [SerializeField] TextMeshProUGUI nameText; //이름 텍스트
-    int readDialogue; //space키를 누른 횟수
+    [SerializeField] Text nameText; //이름 텍스트
+    int readDialogue; 
     public static bool doneStory = false; //스토리를 다봤는지 확인하는 변수
     [SerializeField] GameObject titleImage;
     [SerializeField] Button nextButton; //다음 버튼
@@ -20,46 +21,39 @@ public class Story : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        dialogueText.text = " ";
+        nameText.text = " ";
         readDialogue = 0;
-        dialogueText.text = dialogue[0];
-        nameText.text = name[0];
         titleImage.SetActive(false);
-        nextButton.onClick.AddListener(ReadStory);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space) == true)
+        if (Input.GetKeyDown(KeyCode.Space) == true)
         {
-            readDialogue++;
-            dialogueText.text = dialogue[readDialogue];
-            nameText.text = name[readDialogue];
-
-            if(readDialogue == 10)
+            if(readDialogue < 11)
             {
-                titleImage.SetActive(true);
-                Invoke("NextScene", 3f);
+                nameText.text = name[readDialogue];
+                dialogueText.text = dialogue[readDialogue];
+                readDialogue++;
+
+                if(readDialogue == 11)
+                {
+                    titleImage.SetActive(true);
+                    Invoke("NextScene", 3f);
+                }
             }
-        }
-    }
-
-    void ReadStory()
-    {
-        readDialogue++;
-        dialogueText.text = dialogue[readDialogue];
-        nameText.text = name[readDialogue];
-
-        if (readDialogue == 10)
-        {
-            titleImage.SetActive(true);
-            Invoke("NextScene", 3f);
         }
     }
 
     void NextScene()
     {
-        doneStory = true;
         SceneManager.LoadScene("LobbyScene");
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        
     }
 }
