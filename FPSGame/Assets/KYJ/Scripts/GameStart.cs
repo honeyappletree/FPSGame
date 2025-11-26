@@ -11,6 +11,8 @@ public class GameStart : MonoBehaviour
     [SerializeField] private GameObject quitPanel;
     [SerializeField] private Button exitBtn;
     [SerializeField] private Button resumeBtn;
+    public static AudioSource audioSource;
+    [SerializeField] private AudioClip startSound;
 
     // Start is called before the first frame update
     void Start()
@@ -19,11 +21,15 @@ public class GameStart : MonoBehaviour
         quitBtn.onClick.AddListener(ActiveQuit);
         exitBtn.onClick.AddListener(GameExit);
         resumeBtn.onClick.AddListener(ResumeGame);
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = this.startSound;
+        audioSource.Play();
     }
 
     void GoLobby()
     {
         Time.timeScale = 1;
+        audioSource.Pause();
         if (Story.doneStory == false)
         {
             SceneManager.LoadScene("StoryScene");

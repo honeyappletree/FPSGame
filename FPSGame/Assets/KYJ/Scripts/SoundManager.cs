@@ -5,8 +5,8 @@ using UnityEngine;
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager instance;
-    AudioSource audioSource;
-    [SerializeField] AudioClip gameSound;
+    public static AudioSource audioSource;
+    [SerializeField] AudioClip startSound;//배경음 재생
 
     void Awake()
     {
@@ -24,7 +24,7 @@ public class SoundManager : MonoBehaviour
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        audioSource.clip = this.gameSound;
+        audioSource.clip = this.startSound;
         audioSource.Play();
     }
 }

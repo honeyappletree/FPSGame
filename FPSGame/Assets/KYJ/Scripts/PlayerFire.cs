@@ -29,6 +29,9 @@ public class PlayerFire : MonoBehaviour
     public static bool isReload;//재장전이 가능한지 여부
     [SerializeField] GameObject[] enemy;
     public static int plusNum = 0; //튜토리얼에서 두 가지 스킬을 모두 사용했는지 확인하기 위함.
+    AudioSource audioSource;
+    public AudioClip fireClip; //탄환 발사 시 재생되는 사운드
+    public AudioClip reloadClip; //탄환 재장전 시 재생되는 사운드
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +42,7 @@ public class PlayerFire : MonoBehaviour
         currentBullet = maxBullet;
         canShoot = false;
         isReload = false;
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -115,7 +119,7 @@ public class PlayerFire : MonoBehaviour
                         Debug.Log("currentBullet: " + currentBullet);
                         canShoot = true;
                         Debug.Log("적이 감지되어 총을 사용하였습니다.");
-
+                        audioSource.PlayOneShot(fireClip);
                         enemy[0].GetComponent<EnemyFSM>().HitEnemy();
 
                         if (currentBullet <= 4)
@@ -161,7 +165,7 @@ public class PlayerFire : MonoBehaviour
                         Debug.Log("currentBullet: " + currentBullet);
                         canShoot = true;
                         Debug.Log("적이 감지되어 총을 사용하였습니다.");
-
+                        audioSource.PlayOneShot(fireClip);
                         enemy[1].GetComponent<EnemyFSM>().HitEnemy();
 
                         if (currentBullet <= 4)
@@ -200,6 +204,7 @@ public class PlayerFire : MonoBehaviour
         {
             isReload = true;
             canShoot = false;
+            audioSource.PlayOneShot(reloadClip);
             currentBullet = maxBullet;
             currentBulletText.text = currentBullet.ToString();
             currentBulletText.color = Color.blue;

@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class GunFollow : MonoBehaviour
 {
-    //[SerializeField] private Camera camera;
+    
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -16,4 +16,5 @@ public class GunFollow : MonoBehaviour
     {
         transform.localRotation = Quaternion.identity;
     }
+
 }

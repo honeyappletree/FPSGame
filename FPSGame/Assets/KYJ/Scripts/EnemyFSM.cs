@@ -34,6 +34,8 @@ public class EnemyFSM : MonoBehaviour
     public static int dieEnemy = 0; //죽인 적의 수
     private float remainHP;
     [SerializeField] TextMeshProUGUI currentPersonText;
+    AudioSource audioSource;
+    public AudioClip dieClip; //죽었을 때 사운드
 
     // Start is called before the first frame update
     void Start()
@@ -45,6 +47,7 @@ public class EnemyFSM : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         enemyHPBar = enemyHPBar.GetComponent<Image>();
         dieEnemy = 0;
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -94,6 +97,7 @@ public class EnemyFSM : MonoBehaviour
         {
             e_State = EnemyState.Die;
             Debug.Log("Any State -> Die");
+            audioSource.PlayOneShot(dieClip);
             Die();
             dieEnemy++;
             if (dieEnemy == 2)
@@ -177,6 +181,7 @@ public class EnemyFSM : MonoBehaviour
             {
                 e_State = EnemyState.Die;
                 Debug.Log("Any State -> Die");
+                audioSource.PlayOneShot(dieClip);
                 Die();
                 dieEnemy++;
                 if (dieEnemy == 2)

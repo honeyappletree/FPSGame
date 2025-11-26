@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     int perfectGame = 0;
 
     private bool gameEnded = false;
+    [SerializeField] private AudioClip gameSound;
 
     void Awake()
     {
@@ -34,6 +35,9 @@ public class GameManager : MonoBehaviour
         resultPanel.SetActive(false);
         StartCoroutine(StartTimer());
         Cursor.visible = false;
+        GameStart.audioSource = GetComponent<AudioSource>();
+        GameStart.audioSource.clip = gameSound;
+        GameStart.audioSource.Play();
     }
 
     IEnumerator StartTimer()

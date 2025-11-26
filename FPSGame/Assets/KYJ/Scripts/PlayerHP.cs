@@ -37,7 +37,16 @@ public class PlayerHP : MonoBehaviour
     {
         if(other.gameObject.CompareTag("Fire"))
         {
-            currentHP -= 5;
+            currentHP -= 3;
+            hpBar.fillAmount = currentHP / maxHP;
+            remainHP = hpBar.fillAmount * 100;
+            hpText.text = remainHP.ToString();
+            Debug.Log("currentHp: " + currentHP);
+        }
+
+        if (other.gameObject.CompareTag("Sword") || other.gameObject.CompareTag("Sword2"))
+        {
+            currentHP -= 3;
             hpBar.fillAmount = currentHP / maxHP;
             remainHP = hpBar.fillAmount * 100;
             hpText.text = remainHP.ToString();
@@ -47,7 +56,7 @@ public class PlayerHP : MonoBehaviour
 
     public void DamageAction()
     {
-        currentHP -= 10;
+        currentHP -= 2;
         hpBar.fillAmount = currentHP / maxHP;
         remainHP = hpBar.fillAmount * 100;
         hpText.text = remainHP.ToString();
@@ -94,6 +103,7 @@ public class PlayerHP : MonoBehaviour
             {
                 recoveryHP = (currentHP + _count) - maxHP; //현재 hp + hp 회복량에서 maxHP를 뺀 만큼 회복하여 maxHP만큼만 회복하게끔
                 currentHP += recoveryHP;
+                currentHP = 100;
                 hpBar.fillAmount = currentHP / maxHP;
                 remainHP = hpBar.fillAmount * 100;
                 hpText.text = remainHP.ToString();
@@ -130,4 +140,5 @@ public class PlayerHP : MonoBehaviour
         hpText.color = Color.white;
         Debug.Log("폰트 색이 흰색으로 변하였습니다.");
     }
+
 }

@@ -13,6 +13,8 @@ TagManager:
   - WaterBomb
   - FxTemporaire
   - Coordinates
+  - Sword
+  - Sword2
   layers:
   - Default
   - TransparentFX

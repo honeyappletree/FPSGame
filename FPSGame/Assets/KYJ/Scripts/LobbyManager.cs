@@ -18,6 +18,7 @@ public class LobbyManager : MonoBehaviour
         tutorialButton.onClick.AddListener(GoTutorial);
         undoButton.onClick.AddListener(Undo);
         storyButton.onClick.AddListener(Story);
+        Cursor.visible = true;
     }
 
     void GamePlay() //게임 플레이 버튼을 눌렀을 때

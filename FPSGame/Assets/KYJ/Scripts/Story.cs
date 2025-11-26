@@ -17,6 +17,9 @@ public class Story : MonoBehaviour, IPointerClickHandler
     public static bool doneStory = false; //스토리를 다봤는지 확인하는 변수
     [SerializeField] GameObject titleImage;
     [SerializeField] Button nextButton; //다음 버튼
+    AudioSource storyAudio1;
+    public AudioClip callSound; //전화 거는 신호음
+    public AudioClip carSound; //경찰차 사운드
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +28,7 @@ public class Story : MonoBehaviour, IPointerClickHandler
         nameText.text = " ";
         readDialogue = 0;
         titleImage.SetActive(false);
+        storyAudio1 = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -42,6 +46,19 @@ public class Story : MonoBehaviour, IPointerClickHandler
                 {
                     titleImage.SetActive(true);
                     Invoke("NextScene", 3f);
+                }
+
+                if(readDialogue == 4)
+                {
+                    storyAudio1.PlayOneShot(callSound);
+                }
+                if(readDialogue == 5)
+                {
+                    storyAudio1.Stop();
+                }
+                if (readDialogue == 11)
+                {
+                    storyAudio1.PlayOneShot(carSound);
                 }
             }
         }

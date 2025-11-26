@@ -32,6 +32,7 @@ public class TutorialFSM : MonoBehaviour
     [SerializeField] GameObject player;
     public static bool isDamaged = false;
     public static bool doneTutorial = false;
+    [SerializeField] private AudioClip gameSound;
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +40,9 @@ public class TutorialFSM : MonoBehaviour
         t_State = Tutorial.Idle;
         tutorialText.text = tutorialOrder[0];
         Cursor.visible = false; //마우스 커서가 보이지 않게 하기 위함.
+        GameStart.audioSource = GetComponent<AudioSource>();
+        GameStart.audioSource.clip = gameSound;
+        GameStart.audioSource.Play();
     }
 
     // Update is called once per frame
@@ -164,6 +168,11 @@ public class TutorialFSM : MonoBehaviour
             if(PlayerHP.currentHP == 100)
             {
                 StartCoroutine(PDamage());
+            }
+            if (Slot.useItem == true && PlayerHP.isRecovery == true)
+            {
+                tutorialText.text = tutorialOrder[9];
+                t_State = Tutorial.UseSkill;
             }
         }
     }   
